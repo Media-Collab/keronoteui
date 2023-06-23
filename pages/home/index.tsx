@@ -15,7 +15,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Item from "@components/containers/Item";
 
-export default function BlogPostList() {
+export default function HomeList() {
   return (
     <Box sx={{ width: "100%" }}>
       <Typography

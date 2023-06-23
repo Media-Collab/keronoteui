@@ -5,4 +5,7 @@ module.exports = {
   experimental: {
     newNextLinkBehavior: true,
   },
+  images: {
+    domains: ["cdn.pixabay.com"],
+  },
 };
