@@ -6,7 +6,7 @@ import Stack from "@mui/material/Stack";
 const Item = ({ content }: any) => {
   return (
     <Box
-      padding={5}
+      padding={2}
       margin={1}
       textAlign="center"
       color="secondary"
@@ -17,7 +17,7 @@ const Item = ({ content }: any) => {
       height={300}
     >
       <Stack direction="row" flexWrap="wrap" justifyContent="space-between">
-        <h1>{content}</h1>
+        <h3>{content}</h3>
         {/* <EyeIcon className="block h-6 w-6" aria-hidden="true" />
         <TrashIcon className="block h-6 w-6" aria-hidden="true" /> */}
       </Stack>

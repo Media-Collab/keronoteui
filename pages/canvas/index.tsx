@@ -21,7 +21,6 @@ import Stack from "@mui/material/Stack";
 import Layer from "@components/containers/Layer";
 
 const Canvas = () => {
-  const [nameProject, setNameProject] = useState("Nombre del proyecto");
   const [nameLayer, setNameLayer] = useState("");
   //   const [dimensions, setDimensions] = useState("1280*720")
 
@@ -33,7 +32,7 @@ const Canvas = () => {
     <Stack
       sx={{
         backgroundColor: "#AED3F7",
-        height: "470px",
+        height: "530px",
         display: "grid",
         gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
       }}
@@ -67,6 +66,39 @@ const Canvas = () => {
           <RedoOutlined />
           <TextureOutlined />
           <GroupWorkOutlined />
+          {/* <section
+            style={{
+              width: "100%",
+              heigth: "1rem",
+              display: "flex",
+              justifyContent: "space-around",
+            }}
+          >
+            <BrushOutlined />
+            <RemoveOutlined />
+          </section>
+          <section
+            style={{
+              width: "100%",
+              heigth: "1rem",
+              display: "flex",
+              justifyContent: "space-around",
+            }}
+          >
+            <UndoOutlined />
+            <RedoOutlined />
+          </section>
+          <section
+            style={{
+              width: "100%",
+              heigth: "1rem",
+              display: "flex",
+              justifyContent: "space-around",
+            }}
+          >
+            <TextureOutlined />
+            <GroupWorkOutlined />
+          </section> */}
         </div>
       </section>
       {/* paint zone */}
@@ -75,7 +107,6 @@ const Canvas = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          // padding: "16px",
           gridColumn: "span 9",
         }}
       >
@@ -84,8 +115,8 @@ const Canvas = () => {
           style={{
             margin: " 1rem",
             backgroundColor: " rgb(255, 255, 255)",
-            width: " 85%",
-            height: " 400px",
+            width: " 90%",
+            height: " 90%",
             overflow: "auto",
           }}
         ></canvas>
@@ -124,13 +155,15 @@ const Canvas = () => {
             margin: "1rem",
             justifyContent: "space-between",
             boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+            
           }}
         >
           <section
             style={{
               display: "flex",
               flexDirection: "column-reverse",
-              height: "30vw",
+              // height: "30vw",
+
               overflow: "auto",
               padding: "7px",
             }}
