@@ -16,56 +16,94 @@ import {
   StopOutlined,
   ArrowForwardOutlined,
   DeleteOutlined,
+  Brush,
+  Remove,
+  Undo,
+  Redo,
+  Texture,
+  GroupWork,
+  ArrowBack,
+  Pause,
+  PlayArrow,
+  Stop,
+  ArrowForward,
+  Add,
+  ContentCopy,
+  Delete,
 } from "@mui/icons-material";
 import Stack from "@mui/material/Stack";
 import Layer from "@components/containers/Layer";
+import { useMediaQuery } from "@mui/material";
 
 const Canvas = () => {
+  const breakPoint = useMediaQuery("(min-width:900px)");
   const [nameLayer, setNameLayer] = useState("");
   //   const [dimensions, setDimensions] = useState("1280*720")
+  const [layers, setLayers] = useState([{}]);
 
   const nombre = () => {
     setNameLayer(nameLayer);
+  };
+
+  const alertEvent = (e: any) => {
+    alert(e.target);
   };
 
   return (
     <Stack
       sx={{
         backgroundColor: "#AED3F7",
-        height: "530px",
-        display: "grid",
-        gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
+        height: "100%",
+        gap: "1rem",
+        padding: "1rem",
+        "@media (min-width: 900px)": {
+          display: "grid",
+          gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
+        },
       }}
     >
       {/* brush section */}
       <section
         style={{
-          width: "70%",
+          width: "100%",
           display: "flex",
           justifyContent: "center",
           backgroundColor: "#BFDBFE",
           gridColumn: "span 1",
-          margin: "1rem",
           borderRadius: "1rem",
           boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
         }}
       >
         <div
           style={{
-            padding: "4px",
+            padding: "10px",
             borderRadius: "lg",
             boxShadow: "xl",
             display: "flex",
-            flexDirection: "column",
             justifyContent: "space-around",
+            flexDirection: breakPoint ? "column" : "row",
+            width: "100%",
+            alignItems: "center",
           }}
         >
-          <BrushOutlined />
-          <RemoveOutlined />
-          <UndoOutlined />
-          <RedoOutlined />
-          <TextureOutlined />
-          <GroupWorkOutlined />
+          <div onClick={(e) => alertEvent(e)}>
+            <Brush />
+          </div>
+          <div onClick={(e) => alertEvent(e)}>
+            <Remove />
+          </div>
+          <div onClick={(e) => alertEvent(e)}>
+            <Undo />
+          </div>
+          <div onClick={(e) => alertEvent(e)}>
+            <Redo />
+          </div>
+          <div onClick={(e) => alertEvent(e)}>
+            <Texture />
+          </div>
+          <div onClick={(e) => alertEvent(e)}>
+            <GroupWork />
+          </div>
           {/* <section
             style={{
               width: "100%",
@@ -108,41 +146,53 @@ const Canvas = () => {
           flexDirection: "column",
           alignItems: "center",
           gridColumn: "span 9",
+          gap: "1rem",
+          height: "100%",
         }}
       >
         <canvas
           id="keronote"
           style={{
-            margin: " 1rem",
-            backgroundColor: " rgb(255, 255, 255)",
-            width: " 90%",
-            height: " 90%",
+            backgroundColor: "rgb(255, 255, 255)",
+            width: "100%",
+            height: " 100%",
             overflow: "auto",
+            borderRadius: "1rem",
           }}
         ></canvas>
-        {/* <div
+        <div
           style={{
-            width: "96px",
+            display: "flex",
             backgroundColor: "#BFDBFE",
-            boxShadow: "xl",
-            padding: "2px",
-            borderRadius: "lg",
+            borderRadius: "1rem",
+            boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+            padding: "10px 10px",
           }}
         >
-
-        </div> */}
-        <div style={{ display: "flex" }}>
-          <ArrowBackOutlined />
-          <PauseOutlined style={{ marginLeft: "2px", marginRight: "2px" }} />
-          <PlayArrowOutlined style={{ marginRight: "1px" }} />
-          <StopOutlined style={{ marginRight: "2px" }} />
-          <ArrowForwardOutlined />
+          <div onClick={(e) => alertEvent(e)}>
+            <ArrowBack />
+          </div>
+          <div onClick={(e) => alertEvent(e)}>
+            <Pause style={{ marginLeft: "2px", marginRight: "2px" }} />
+          </div>
+          <div onClick={(e) => alertEvent(e)}>
+            <PlayArrow style={{ marginRight: "1px" }} />
+          </div>
+          <div onClick={(e) => alertEvent(e)}>
+            <Stop style={{ marginRight: "2px" }} />
+          </div>
+          <div onClick={(e) => alertEvent(e)}>
+            <ArrowForward />
+          </div>
         </div>
       </section>
       {/* layer view */}
       <section
         style={{
           gridColumn: "span 2",
+          gap: "1rem",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         {/* layers active */}
@@ -152,31 +202,25 @@ const Canvas = () => {
             flexDirection: "column",
             backgroundColor: "#BFDBFE",
             borderRadius: "1rem",
-            margin: "1rem",
             justifyContent: "space-between",
             boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
-            
+            gap: "1rem",
+            padding: "7px",
           }}
         >
           <section
             style={{
               display: "flex",
-              flexDirection: "column-reverse",
+              flexDirection: breakPoint ? "column" : "row",
               // height: "30vw",
-
               overflow: "auto",
-              padding: "7px",
+              gap: breakPoint ? "1rem" : "0.5rem",
+              borderRadius: "1rem",
             }}
           >
-            <Layer nameLayer="Layer 1" />
-            <Layer nameLayer="Layer 2" />
-            <Layer nameLayer="Layer 3" />
-            <Layer nameLayer="Layer 4" />
-            <Layer nameLayer="Layer 5" />
-            <Layer nameLayer="Layer 6" />
-            <Layer nameLayer="Layer 7" />
-            <Layer nameLayer="Layer 8" />
-            <Layer nameLayer="Layer 9" />
+            {layers.map((layer) => (
+              <Layer nameLayer="Layer 1" />
+            ))}
           </section>
         </section>
         {/* layers controller */}
@@ -186,17 +230,33 @@ const Canvas = () => {
             flexDirection: "row",
             backgroundColor: "#BFDBFE",
             borderRadius: "1rem",
-            padding: "5px 0px",
+            padding: "10px",
             justifyContent: "space-evenly",
-            width: "88%",
             alignItems: "center",
             margin: "auto",
             boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+            gap: "1rem",
           }}
         >
-          <AddOutlined sx={{ cursor: "pointer" }} />
-          <ContentCopyOutlined sx={{ cursor: "pointer" }} />
-          <DeleteOutlined sx={{ cursor: "pointer" }} />
+          <div
+            onClick={(e) => {
+              alertEvent(e);
+              setLayers([...layers, "layer"]);
+            }}
+          >
+            <Add sx={{ cursor: "pointer" }} />
+          </div>
+          <div onClick={(e) => alertEvent(e)}>
+            <ContentCopy sx={{ cursor: "pointer" }} />
+          </div>
+          <div
+            onClick={(e) => {
+              alertEvent(e);
+              setLayers(layers.filter((layer) => layer !== "layer"));
+            }}
+          >
+            <Delete sx={{ cursor: "pointer" }} />
+          </div>
         </section>
       </section>
     </Stack>

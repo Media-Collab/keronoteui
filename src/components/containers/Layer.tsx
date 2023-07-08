@@ -11,6 +11,8 @@ const Layer = ({ nameLayer }: any) => {
           backgroundColor: "#FFFFFF",
           width: "100%",
           height: "80px",
+          minWidth: "100px",
+          borderRadius: "0.5rem",
         }}
       ></canvas>
       <p
@@ -21,6 +23,7 @@ const Layer = ({ nameLayer }: any) => {
           width: "100%",
           padding: "3px",
           textAlign: "center",
+          borderRadius: "0.5rem",
           fontWeight: "600",
         }}
       >
