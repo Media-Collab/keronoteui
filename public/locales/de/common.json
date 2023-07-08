@@ -1,163 +1,184 @@
 {
   "pages": {
     "login": {
-      "title": "Iniciar sesión en su cuenta",
-      "signin": "Iniciar sesión",
-      "signup": "Inscribirse",
-      "divider": "o",
+      "title": "Melden Sie sich bei Ihrem Konto an",
+      "signin": "Einloggen",
+      "signup": "Anmelden",
+      "divider": "oder",
       "fields": {
-        "email": "Correo electrónico",
-        "password": "Contraseña"
+        "email": "Email",
+        "password": "Passwort"
       },
       "errors": {
-        "validEmail": "Dirección de correo electrónico no válida"
+        "validEmail": "Ungültige E-Mail-Adresse"
       },
       "buttons": {
-        "submit": "Acceso",
-        "forgotPassword": "¿Has olvidado tu contraseña?",
-        "noAccount": "¿No tienes una cuenta?",
-        "rememberMe": "Acuérdate de mí"
+        "submit": "Anmeldung",
+        "forgotPassword": "Passwort vergessen?",
+        "noAccount": "Sie haben kein Konto?",
+        "rememberMe": "Erinnere dich an mich"
       }
     },
     "forgotPassword": {
-      "title": "¿Olvidaste tu contraseña?",
+      "title": "Haben Sie Ihr Passwort vergessen?",
       "fields": {
-        "email": "Correo electrónico"
+        "email": "Email"
       },
       "errors": {
-        "validEmail": "Dirección de correo electrónico no válida"
+        "validEmail": "Ungültige E-Mail-Adresse"
       },
       "buttons": {
-        "submit": "Enviar instrucciones de reinicio"
+        "submit": "Anweisungen zum Zurücksetzen senden"
       }
     },
     "register": {
-      "title": "Regístrese en su cuenta",
+      "title": "Registrieren Sie sich für Ihr Konto",
       "fields": {
-        "email": "Correo electrónico",
-        "password": "Contraseña"
+        "email": "Email",
+        "password": "Passwort"
       },
       "errors": {
-        "validEmail": "Dirección de correo electrónico no válida"
+        "validEmail": "Ungültige E-Mail-Adresse"
       },
       "buttons": {
-        "submit": "Registro",
-        "haveAccount": "¿Tener una cuenta?"
+        "submit": "Registrieren",
+        "haveAccount": "Ein Konto haben?"
       }
     },
     "updatePassword": {
-      "title": "Actualiza contraseña",
+      "title": "Kennwort aktualisieren",
       "fields": {
-        "password": "Nueva contraseña",
-        "confirmPassword": "Confirmar nueva contraseña"
+        "password": "Neues Passwort",
+        "confirmPassword": "Bestätige neues Passwort"
       },
       "errors": {
-        "confirmPasswordNotMatch": "Las contraseñas no coinciden"
+        "confirmPasswordNotMatch": "Passwörter stimmen nicht überein"
       },
       "buttons": {
-        "submit": "Actualizar"
+        "submit": "Aktualisieren"
       }
     },
     "error": {
-      "info": "Es posible que haya olvidado agregar el componente {{action}} al recurso {{resource}}.",
-      "404": "Lo siento, la página que visitaste no existe.",
-      "resource404": "¿Estás seguro de haber creado el recurso {{resource}}?",
-      "backHome": "De vuelta a casa"
+      "info": "Sie haben vergessen, {{action}} component zu {{resource}} hinzufügen.",
+      "404": "Leider existiert diese Seite nicht.",
+      "resource404": "Haben Sie die {{resource}} resource erstellt?",
+      "backHome": "Zurück"
     }
   },
   "actions": {
-    "list": "Lista",
-    "create": "Crear",
-    "edit": "Editar",
-    "show": "Espectáculo"
+    "list": "Aufführen",
+    "create": "Erstellen",
+    "edit": "Bearbeiten",
+    "show": "Zeigen"
   },
   "buttons": {
-    "create": "Crear",
-    "save": "Ahorrar",
-    "logout": "Cerrar sesión",
-    "delete": "Borrar",
-    "edit": "Editar",
-    "cancel": "Cancelar",
-    "confirm": "¿Está seguro?",
-    "filter": "Filtrar",
-    "clear": "Claro",
-    "refresh": "Actualizar",
-    "show": "Espectáculo",
-    "undo": "Deshacer",
-    "import": "Importar",
-    "clone": "Clon",
-    "notAccessTitle": "No tienes permiso para acceder"
+    "create": "Erstellen",
+    "save": "Speichern",
+    "logout": "Abmelden",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "cancel": "Abbrechen",
+    "confirm": "Sicher?",
+    "filter": "Filter",
+    "clear": "Löschen",
+    "refresh": "Erneuern",
+    "show": "Zeigen",
+    "undo": "Undo",
+    "import": "Importieren",
+    "clone": "Klon",
+    "notAccessTitle": "Sie haben keine zugriffsberechtigung"
   },
-  "warnWhenUnsavedChanges": "¿Seguro que quieres salir? Tienes cambios sin guardar.",
+  "warnWhenUnsavedChanges": "Nicht gespeicherte Änderungen werden nicht übernommen.",
   "notifications": {
-    "success": "Exitoso",
-    "error": "Error (código de estado: {{statusCode}})",
-    "undoable": "Tienes {{segundos}} segundos para deshacer",
-    "createSuccess": "{{recurso}} creado con éxito",
-    "createError": "Hubo un error al crear {{resource}} (código de estado: {{statusCode}})",
-    "deleteSuccess": "Se eliminó con éxito {{recurso}}",
-    "deleteError": "Error al eliminar {{recurso}} (código de estado: {{statusCode}})",
-    "editSuccess": "{{recurso}} editado con éxito",
-    "editError": "Error al editar {{resource}} (código de estado: {{statusCode}})",
-    "importProgress": "Importando: {{procesado}}/{{total}}"
+    "success": "Erfolg",
+    "error": "Fehler (status code: {{statusCode}})",
+    "undoable": "Sie haben {{seconds}} Sekunden Zeit für Undo.",
+    "createSuccess": "{{resource}} erfolgreich erstellt.",
+    "createError": "Fehler beim Erstellen {{resource}} (status code: {{statusCode}})",
+    "deleteSuccess": "{{resource}} erfolgreich gelöscht.",
+    "deleteError": "Fehler beim Löschen {{resource}} (status code: {{statusCode}})",
+    "editSuccess": "{{resource}} erfolgreich bearbeitet.",
+    "editError": "Fehler beim Bearbeiten {{resource}} (status code: {{statusCode}})",
+    "importProgress": "{{processed}}/{{total}} importiert"
   },
-  "loading": "Cargando",
+  "loading": "Wird geladen",
   "tags": {
-    "clone": "Clon"
+    "clone": "Klon"
   },
   "dashboard": {
-    "title": "Panel"
+    "title": "Dashboard"
   },
   "blog_posts": {
-    "blog_posts": "Publicaciones de blog",
+    "blog_posts": "Blogbeiträge",
     "fields": {
-      "id": "Identificación",
-      "title": "Título",
-      "content": "Contenido",
-      "status": "Estado",
-      "created_at": "Creado en",
-      "categoryId": "Categoría"
+      "id": "Id",
+      "title": "Titel",
+      "content": "Inhalt",
+      "status": "Status",
+      "created_at": "Erstellt am",
+      "categoryId": "Kategorien"
     },
     "titles": {
-      "create": "Crear publicación de blog",
-      "edit": "Editar publicación de blog",
-      "list": "Publicaciones de blog",
-      "show": "Mostrar publicación de blog"
+      "create": "Erstellen",
+      "edit": "Bearbeiten",
+      "list": "Einträge",
+      "show": "Eintrag zeigen"
     }
   },
   "categories": {
-    "categories": "Categorías",
+    "categories": "Kategorien",
     "fields": {
-      "id": "Identificación",
-      "title": "Título",
-      "created_at": "Creado en"
+      "id": "Id",
+      "title": "Titel",
+      "created_at": "Erstellt am"
     },
     "titles": {
-      "create": "Crear Categoría",
-      "edit": "Editar categoria",
-      "list": "Categorías",
-      "show": "Mostrar categoría"
+      "create": "Erstellen",
+      "edit": "Bearbeiten",
+      "list": "Einträge",
+      "show": "Eintrag zeigen"
+    }
+  },
+  "canvas": {
+    "canvas": "Canvas",
+    "fields": {
+      "id": "Id",
+      "title": "Title",
+      "created_at": "Created At"
+    },
+    "titles": {
+      "create": "Create Canvas",
+      "edit": "Edit Canvas",
+      "list": "Canvas",
+      "show": "Show Canvas"
     }
   },
   "documentTitle": {
-    "default": "refinar",
-    "suffix": " | refinar",
+    "default": "refine",
+    "suffix": " | refine",
     "blog_posts": {
-      "list": "Publicaciones de blog | refinar",
-      "show": "#{{id}} Mostrar publicación de blog | refinar",
-      "edit": "#{{id}} Editar publicación de blog | refinar",
-      "create": "Crear nueva publicación de blog | refinar",
-      "clone": "#{{id}} Publicación de blog clonada | refinar"
+      "list": "Blogbeiträge | refine",
+      "show": "#{{id}} Show Blogeintrag | refine",
+      "edit": "#{{id}} Edit Blogeintrag | refine",
+      "create": "Create new Blogeintrag | refine",
+      "clone": "#{{id}} Clone Blogeintrag | refine"
     },
     "categories": {
-      "list": "Categorías | refinar",
-      "show": "#{{id}} Mostrar categoría | refinar",
-      "edit": "#{{id}} Editar Categoría | Refinar",
-      "create": "Crear nueva categoría | refinar",
-      "clone": "#{{id}} Clonar categoría | refinar"
+      "list": "Kategorien | refine",
+      "show": "#{{id}} Zeigen Kategorien | refine",
+      "edit": "#{{id}} Bearbeiten Kategorien | refine",
+      "create": "Neue Kategorie Erstellen | refine",
+      "clone": "#{{id}} Klon Kategorie | refine"
+    },
+    "canvas": {
+      "list": "Categories | refine",
+      "show": "#{{id}} Show Canvas | refine",
+      "edit": "#{{id}} Edit Canvas | refine",
+      "create": "Create new Canvas | refine",
+      "clone": "#{{id}} Clone Canvas | refine"
     }
   },
   "table": {
-    "actions": "Acciones"
+    "actions": "Aktionen"
   }
 }

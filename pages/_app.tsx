@@ -85,7 +85,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                     canDelete: true,
                   },
                 },
-                {
+                /* {
                   name: "categories",
                   list: "/categories",
                   create: "/categories/create",
@@ -94,7 +94,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                   meta: {
                     canDelete: true,
                   },
-                },
+                }, */
                 {
                   name: "canvas",
                   list: "/canvas",

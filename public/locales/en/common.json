@@ -139,6 +139,20 @@
       "show": "Show Category"
     }
   },
+  "canvas": {
+    "canvas": "Canvas",
+    "fields": {
+      "id": "Id",
+      "title": "Title",
+      "created_at": "Created At"
+    },
+    "titles": {
+      "create": "Create Canvas",
+      "edit": "Edit Canvas",
+      "list": "Canvas",
+      "show": "Show Canvas"
+    }
+  },
   "documentTitle": {
     "default": "refine",
     "suffix": " | refine",
@@ -155,6 +169,13 @@
       "edit": "#{{id}} Edit Category | refine",
       "create": "Create new Category | refine",
       "clone": "#{{id}} Clone Category | refine"
+    },
+    "canvas": {
+      "list": "Categories | refine",
+      "show": "#{{id}} Show Canvas | refine",
+      "edit": "#{{id}} Edit Canvas | refine",
+      "create": "Create new Canvas | refine",
+      "clone": "#{{id}} Clone Canvas | refine"
     }
   },
   "table": {
