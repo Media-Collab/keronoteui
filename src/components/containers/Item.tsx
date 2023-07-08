@@ -1,3 +1,4 @@
+"use client"
 import Image from "next/image";
 import Box from "@mui/material/Box";
 // import { EyeIcon, TrashIcon } from "@heroicons/react/outline";
@@ -6,11 +7,11 @@ import Stack from "@mui/material/Stack";
 const Item = ({ content }: any) => {
   return (
     <Box
+      component="div"
       padding={2}
       margin={1}
       textAlign="center"
       color="secondary"
-      backgroundColor="white"
       border="1px solid #e0e0e0"
       borderRadius={5}
       width={300}
