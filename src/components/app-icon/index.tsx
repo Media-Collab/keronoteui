@@ -14,7 +14,7 @@ export const AppIcon: React.FC = () => {
         <path
           fillRule="evenodd"
           d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.333 4a2.667 2.667 0 0 1 5.334 0v8a2.667 2.667 0 1 1-5.334 0z"
-          clip-rule="evenodd"
+          clipRule="evenodd"
         />
       </g>
     </svg>

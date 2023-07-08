@@ -138,7 +138,7 @@ const Item: React.FC<ItemProps> = ({ content }) => {
           </IconButton>
           <Typography>{likes} Likes</Typography>
         </Stack>
-        <Typography>@{content}</Typography>
+        <Typography sx={{mr: 1}}>@{content}</Typography>
       </Stack>
       <Modal
         open={modalOpen}
@@ -156,26 +156,27 @@ const Item: React.FC<ItemProps> = ({ content }) => {
             border: "2px solid #000",
             boxShadow: 24,
             p: 4,
+            width: "90%", // Cambia el ancho del modal al 90% del contenedor
+            maxWidth: 600, // Establece un ancho máximo para el modal
+            maxHeight: "555px"
           }}
         >
           <Typography variant="h6" id="modal-title" sx={{ marginBottom: 2 }}>
             {content}
           </Typography>
-          <Box position="relative" width={600} height={400}>
+          <Box position="relative" width={"100%"} height={"30vw"}>
             <Image
-              src="https://cdn.pixabay.com/photo/2022/04/18/02/24/architecture-7139263_960_720.jpg"
+              src="https://cdn.pixabay.com/photo/2022/12/01/04/35/sunset-7628294_1280.jpg"
               alt="Image"
               layout="fill"
               objectFit="contain"
             />
           </Box>
-          <Stack direction="row" alignItems="center">
+          <Stack direction="column" alignItems="left">
             <IconButton onClick={handleLike} color="primary">
               <Icon path={liked ? mdiHeart : mdiHeartOutline} size={1} />
-            </IconButton>
             <Typography>{likes} Likes</Typography>
-          </Stack>
-          <Stack direction="row" alignItems="center">
+            </IconButton>
             <Typography >@{content}</Typography>
           </Stack>
         </Box>
