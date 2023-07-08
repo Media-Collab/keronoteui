@@ -1,9 +1,13 @@
-const Layer = ({ nameLayer }: any) => {
+const Layer = (props: any) => {
+  const { layer, setLayers, layers } = props;
+  const { name, isSelect } = layer;
+
   return (
     <section
       style={{
-        padding: "2px",
-        backgroundColor: "#BFDBFE",
+        padding: "7px",
+        backgroundColor: !isSelect ? "#BFDBFE" : "#83B0E7",
+        borderRadius: "0.5rem",
       }}
     >
       <canvas
@@ -15,7 +19,7 @@ const Layer = ({ nameLayer }: any) => {
           borderRadius: "0.5rem",
         }}
       ></canvas>
-      <p
+      <input
         style={{
           fontSize: "11px",
           margin: "0px",
@@ -25,10 +29,21 @@ const Layer = ({ nameLayer }: any) => {
           textAlign: "center",
           borderRadius: "0.5rem",
           fontWeight: "600",
+          border: "none",
         }}
-      >
-        {nameLayer !== null ? nameLayer : "Default"}
-      </p>
+        value={name}
+        disabled={!isSelect}
+        onChange={(e) => {
+          setLayers(
+            layers.map((layer: any) => {
+              if (layer.isSelect) {
+                layer.name = e.target.value;
+              }
+              return layer;
+            })
+          );
+        }}
+      />
     </section>
   );
 };

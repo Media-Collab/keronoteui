@@ -37,17 +37,43 @@ import { useMediaQuery } from "@mui/material";
 
 const Canvas = () => {
   const breakPoint = useMediaQuery("(min-width:900px)");
-  const [nameLayer, setNameLayer] = useState("");
-  //   const [dimensions, setDimensions] = useState("1280*720")
-  const [layers, setLayers] = useState([{}]);
-
-  const nombre = () => {
-    setNameLayer(nameLayer);
-  };
+  const [layers, setLayers] = useState([
+    {
+      id: 1,
+      name: "Layer 1",
+      isSelect: true,
+    },
+  ]);
 
   const alertEvent = (e: any) => {
     alert(e.target);
   };
+
+  const addLayer = () => {
+    const newLayer = {
+      id: layers.length + 1,
+      name: `Layer ${layers.length + 1}`,
+      isSelect: false,
+    };
+    setLayers([...layers, newLayer]);
+  };
+
+  const removeLayer = () => {
+    const layersToKeep = layers.filter((layer) => layer.isSelect === false);
+    setLayers(layersToKeep);
+  };
+
+  const copyLayer = () => {
+    const selectedLayer = layers.filter((layer) => layer.isSelect === true);
+    const newLayer = {
+      id: selectedLayer[0].id + 1,
+      name: selectedLayer[0].name + " copy",
+      isSelect: false,
+    };
+    setLayers([...layers, newLayer]);
+  };
+
+  console.log("layers", layers);
 
   return (
     <Stack
@@ -72,6 +98,8 @@ const Canvas = () => {
           gridColumn: "span 1",
           borderRadius: "1rem",
           boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+          maxHeight: breakPoint ? "506px" : "184px",
+
         }}
       >
         <div
@@ -154,11 +182,12 @@ const Canvas = () => {
           id="keronote"
           style={{
             backgroundColor: "rgb(255, 255, 255)",
-            width: "100%",
-            height: " 100%",
             overflow: "auto",
             borderRadius: "1rem",
           }}
+          // Guarda una proporción de 16:9 para el canvas y que se adapte al tamaño de la pantalla de acuerdo al breakpoint
+          width={breakPoint ? 900 : 300}
+          height={breakPoint ? 506 : 184}
         ></canvas>
         <div
           style={{
@@ -212,14 +241,42 @@ const Canvas = () => {
             style={{
               display: "flex",
               flexDirection: breakPoint ? "column" : "row",
-              // height: "30vw",
               overflow: "auto",
               gap: breakPoint ? "1rem" : "0.5rem",
               borderRadius: "1rem",
+              // El max-height es el tamaño del canvas
+              maxHeight: breakPoint ? "506px" : "184px",
             }}
           >
-            {layers.map((layer) => (
-              <Layer nameLayer="Layer 1" />
+            {layers.map((layer, index) => (
+              <div
+                onDoubleClick={(e) => {
+                  setLayers(
+                    layers.map((layer, i) => {
+                      if (i === index) {
+                        layer.isSelect = !layer.isSelect;
+                      }
+                      return layer;
+                    })
+                  );
+                }}
+                draggable
+                onDragStart={(e) => {
+                  e.dataTransfer.setData("text/plain", index);
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                }}
+                onDrop={(e) => {
+                  const from = e.dataTransfer.getData("text/plain");
+                  const to = index;
+                  const newLayers = layers.slice();
+                  newLayers.splice(to, 0, newLayers.splice(from, 1)[0]);
+                  setLayers(newLayers);
+                }}
+              >
+                <Layer layer={layer} layers={layers} setLayers={setLayers} />
+              </div>
             ))}
           </section>
         </section>
@@ -233,26 +290,23 @@ const Canvas = () => {
             padding: "10px",
             justifyContent: "space-evenly",
             alignItems: "center",
-            margin: "auto",
             boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
             gap: "1rem",
           }}
         >
           <div
             onClick={(e) => {
-              alertEvent(e);
-              setLayers([...layers, "layer"]);
+              addLayer();
             }}
           >
             <Add sx={{ cursor: "pointer" }} />
           </div>
-          <div onClick={(e) => alertEvent(e)}>
+          <div onClick={(e) => copyLayer()}>
             <ContentCopy sx={{ cursor: "pointer" }} />
           </div>
           <div
             onClick={(e) => {
-              alertEvent(e);
-              setLayers(layers.filter((layer) => layer !== "layer"));
+              removeLayer();
             }}
           >
             <Delete sx={{ cursor: "pointer" }} />
