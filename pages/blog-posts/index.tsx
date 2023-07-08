@@ -1,4 +1,4 @@
-/* import { MuiListInferencer } from "@refinedev/inferencer/mui";
+import { MuiListInferencer } from "@refinedev/inferencer/mui";
 import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { authProvider } from "src/authProvider";
@@ -121,10 +121,10 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     },
   };
 };
- */
 
 
-import { MuiListInferencer } from "@refinedev/inferencer/mui";
+
+/* import { MuiListInferencer } from "@refinedev/inferencer/mui";
 import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { authProvider } from "src/authProvider";
@@ -157,4 +157,4 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
       ...translateProps,
     },
   };
-};
+}; */

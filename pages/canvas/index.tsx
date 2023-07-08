@@ -1,39 +1,23 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-// icons https://mui.com/material-ui/material-icons/?theme=Outlined&query=delete
-import {
-  BrushOutlined,
-  ContentCopyOutlined,
-  RemoveOutlined,
-  TextureOutlined,
-  GroupWorkOutlined,
-  UndoOutlined,
-  RedoOutlined,
-  AddOutlined,
-  ArrowBackOutlined,
-  PauseOutlined,
-  PlayArrowOutlined,
-  StopOutlined,
-  ArrowForwardOutlined,
-  DeleteOutlined,
-  Brush,
-  Remove,
-  Undo,
-  Redo,
-  Texture,
-  GroupWork,
-  ArrowBack,
-  Pause,
-  PlayArrow,
-  Stop,
-  ArrowForward,
-  Add,
-  ContentCopy,
-  Delete,
-} from "@mui/icons-material";
 import Stack from "@mui/material/Stack";
 import Layer from "@components/containers/Layer";
 import { useMediaQuery } from "@mui/material";
+import Icon from "@mdi/react";
+import {
+  mdiEraser,
+  mdiBrush,
+  mdiUndo,
+  mdiRedo,
+  mdiSquare,
+  mdiVectorCombine,
+  mdiPlay,
+  mdiStop,
+  mdiPause,
+  mdiArrowLeft,
+  mdiArrowRight,
+  mdiPlus,mdiContentDuplicate,mdiTrashCan
+} from "@mdi/js";
 
 const Canvas = () => {
   const breakPoint = useMediaQuery("(min-width:900px)");
@@ -99,7 +83,6 @@ const Canvas = () => {
           borderRadius: "1rem",
           boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
           maxHeight: breakPoint ? "506px" : "184px",
-
         }}
       >
         <div
@@ -108,29 +91,29 @@ const Canvas = () => {
             borderRadius: "lg",
             boxShadow: "xl",
             display: "flex",
-            justifyContent: "space-around",
             flexDirection: breakPoint ? "column" : "row",
             width: "100%",
+            justifyContent: "space-around",
             alignItems: "center",
           }}
         >
           <div onClick={(e) => alertEvent(e)}>
-            <Brush />
+            <Icon path={mdiBrush} size={1} />
           </div>
           <div onClick={(e) => alertEvent(e)}>
-            <Remove />
+            <Icon path={mdiEraser} size={1} />
           </div>
           <div onClick={(e) => alertEvent(e)}>
-            <Undo />
+            <Icon path={mdiUndo} size={1} />
           </div>
           <div onClick={(e) => alertEvent(e)}>
-            <Redo />
+            <Icon path={mdiRedo} size={1} />
           </div>
           <div onClick={(e) => alertEvent(e)}>
-            <Texture />
+            <Icon path={mdiSquare} size={1} />
           </div>
           <div onClick={(e) => alertEvent(e)}>
-            <GroupWork />
+            <Icon path={mdiVectorCombine} size={1} />
           </div>
           {/* <section
             style={{
@@ -196,22 +179,26 @@ const Canvas = () => {
             borderRadius: "1rem",
             boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
             padding: "10px 10px",
+            height: "3rem",
+            justifyContent: "space-around",
+            alignItems: "center",
+            width: "80%"
           }}
         >
           <div onClick={(e) => alertEvent(e)}>
-            <ArrowBack />
+            <Icon path={mdiArrowLeft} size={1} />
           </div>
           <div onClick={(e) => alertEvent(e)}>
-            <Pause style={{ marginLeft: "2px", marginRight: "2px" }} />
+            <Icon path={mdiPause} size={1} />
           </div>
           <div onClick={(e) => alertEvent(e)}>
-            <PlayArrow style={{ marginRight: "1px" }} />
+            <Icon path={mdiPlay} size={1} />
           </div>
           <div onClick={(e) => alertEvent(e)}>
-            <Stop style={{ marginRight: "2px" }} />
+            <Icon path={mdiStop} size={1} />
           </div>
           <div onClick={(e) => alertEvent(e)}>
-            <ArrowForward />
+            <Icon path={mdiArrowRight} size={1} />
           </div>
         </div>
       </section>
@@ -248,7 +235,7 @@ const Canvas = () => {
               maxHeight: breakPoint ? "506px" : "184px",
             }}
           >
-            {layers.map((layer, index) => (
+            {layers.map((layer: any, index: any) => (
               <div
                 onDoubleClick={(e) => {
                   setLayers(
@@ -299,17 +286,18 @@ const Canvas = () => {
               addLayer();
             }}
           >
-            <Add sx={{ cursor: "pointer" }} />
+            <Icon path={mdiPlus  } size={1} />
           </div>
           <div onClick={(e) => copyLayer()}>
-            <ContentCopy sx={{ cursor: "pointer" }} />
+          <Icon path={mdiContentDuplicate } size={1} />
+            
           </div>
           <div
             onClick={(e) => {
               removeLayer();
             }}
           >
-            <Delete sx={{ cursor: "pointer" }} />
+            <Icon path={mdiTrashCan } size={1} />
           </div>
         </section>
       </section>
