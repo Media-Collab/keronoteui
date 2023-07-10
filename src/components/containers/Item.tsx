@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import { Box, Stack, Typography, IconButton, Modal } from "@mui/material";
 import { useMediaQuery } from "@mui/material";
@@ -17,6 +17,7 @@ const Item: React.FC<ItemProps> = ({ key, content, currentPage }) => {
   const [liked, setLiked] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const breakPoint = useMediaQuery("(min-width:900px)");
+  const fullscreenRef = useRef(null);
 
   const handleLike = () => {
     if (liked) {
@@ -28,11 +29,29 @@ const Item: React.FC<ItemProps> = ({ key, content, currentPage }) => {
   };
 
   const handleModalOpen = () => {
+    activarPantallaCompleta();
     setModalOpen(true);
   };
 
   const handleModalClose = () => {
     setModalOpen(false);
+  };
+
+  const activarPantallaCompleta = () => {
+    const elemento = fullscreenRef.current;
+    const elemento2 = document.getElementById("modalinfoo");
+    // debugger;
+    // if (elemento2) {
+    //   if (elemento2.requestFullscreen) {
+    //     elemento2.requestFullscreen();
+    //   } else if (elemento2.mozRequestFullScreen) {
+    //     elemento2.mozRequestFullScreen();
+    //   } else if (elemento2.webkitRequestFullscreen) {
+    //     elemento2.webkitRequestFullscreen();
+    //   } else if (elemento2.msRequestFullscreen) {
+    //     elemento2.msRequestFullscreen();
+    //   }
+    // }
   };
 
   return (
@@ -53,6 +72,7 @@ const Item: React.FC<ItemProps> = ({ key, content, currentPage }) => {
         mb: 1,
       }}
       key={key}
+      id="modalinfoo"
     >
       <Typography
         variant="h6"
@@ -60,7 +80,14 @@ const Item: React.FC<ItemProps> = ({ key, content, currentPage }) => {
       >
         {content}-page: {currentPage}
       </Typography>
-      <Box position="relative" width={"100%"} height={300}>
+      <Box
+        position="relative"
+        width={"100%"}
+        height={300}
+        sx={{
+          cursor: "zoom-in",
+        }}
+      >
         <Image
           src="https://cdn.pixabay.com/photo/2022/12/01/04/35/sunset-7628294_1280.jpg"
           alt="Image"
@@ -85,6 +112,7 @@ const Item: React.FC<ItemProps> = ({ key, content, currentPage }) => {
         aria-describedby="modal-description"
       >
         <Box
+          ref={fullscreenRef}
           sx={{
             position: "absolute",
             top: "50%",
@@ -96,23 +124,21 @@ const Item: React.FC<ItemProps> = ({ key, content, currentPage }) => {
             p: 4,
             width: "90%", // Cambia el ancho del modal al 90% del contenedor
             maxWidth: "80vw", // Establece un ancho máximo para el modal
-            height: breakPoint ? "40rem" : "70vh",
+            height: breakPoint ? "38rem" : "70vh",
             overflow: "auto",
           }}
         >
-          <Typography variant="h6" id="modal-title" sx={{ marginBottom: 2 }}>
-            {content}
-          </Typography>
           <Box
             position="relative"
             width={"100%"}
-            height={breakPoint ? "28rem" : "70vw"}
+            height={breakPoint ? "26rem" : "70vw"}
           >
             <Image
               src="https://cdn.pixabay.com/photo/2022/12/01/04/35/sunset-7628294_1280.jpg"
               alt="Image"
               layout="fill"
               objectFit="contain"
+              // Añade el evento para activar pantalla completa
             />
           </Box>
           <Stack direction="column" alignItems="left">
@@ -120,7 +146,11 @@ const Item: React.FC<ItemProps> = ({ key, content, currentPage }) => {
               <Icon path={liked ? mdiHeart : mdiHeartOutline} size={1} />
               <Typography>{likes} Likes</Typography>
             </IconButton>
-            <Typography>@{content}</Typography>
+
+            {/* close modal */}
+            <IconButton onClick={handleModalClose} color="primary">
+              <Typography>Close</Typography>
+            </IconButton>
           </Stack>
         </Box>
       </Modal>
