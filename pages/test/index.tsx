@@ -5,9 +5,10 @@ import { useList, useCreate, HttpError, BaseKey } from "@refinedev/core";
 
 interface IAnimations {
   id: number;
-  user: BaseKey;
-  thumbnail: string;
   title: string;
+  thumbnail: string;
+  username: string;
+  likes: number;
 }
 
 const ProductList: React.FC = () => {
@@ -22,10 +23,7 @@ const ProductList: React.FC = () => {
   }); */
 
   const { data, isLoading, isError } = useList<IAnimations, HttpError>({
-    resource: "animations", 
-    meta: {
-      select: "*, profiles(*)"
-    }
+    resource: "animation_list"
   });
 
   const animations = data?.data ?? [];
@@ -43,7 +41,6 @@ const ProductList: React.FC = () => {
       {animations.map((animation) => (
         <>
           <p>{JSON.stringify(animation)}</p>
-          <p>{animation.user}</p>
         </>
       ))}
     </ul>
