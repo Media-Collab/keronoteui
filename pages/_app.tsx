@@ -105,6 +105,10 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                     canDelete: true,
                   },
                 },
+                {
+                  name: "test",
+                  list: "/test",
+                },
               ]}
               options={{
                 syncWithLocation: true,
