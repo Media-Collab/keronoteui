@@ -1,12 +1,13 @@
 import { GetServerSideProps } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { authProvider } from "src/authProvider";
-import { useList, useCreate, HttpError } from "@refinedev/core";
+import { useList, useCreate, HttpError, BaseKey } from "@refinedev/core";
 
-interface IProduct {
+interface IAnimations {
   id: number;
-  name: string;
-  material: string;
+  user: BaseKey;
+  thumbnail: string;
+  title: string;
 }
 
 const ProductList: React.FC = () => {
@@ -20,11 +21,14 @@ const ProductList: React.FC = () => {
     },
   }); */
 
-  const { data, isLoading, isError } = useList<IProduct, HttpError>({
-    resource: "products",
+  const { data, isLoading, isError } = useList<IAnimations, HttpError>({
+    resource: "animations", 
+    meta: {
+      select: "*, profiles(*)"
+    }
   });
 
-  const products = data?.data ?? [];
+  const animations = data?.data ?? [];
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -36,12 +40,11 @@ const ProductList: React.FC = () => {
 
   return (
     <ul>
-      {products.map((product) => (
-        <li key={product.id}>
-          <h4>
-            {product.name} - ({product.material})
-          </h4>
-        </li>
+      {animations.map((animation) => (
+        <>
+          <p>{JSON.stringify(animation)}</p>
+          <p>{animation.user}</p>
+        </>
       ))}
     </ul>
   );

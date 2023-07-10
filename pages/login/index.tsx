@@ -23,7 +23,10 @@ export default function Login() {
           icon={<AppIcon />}
         />
       }
-    />
+      
+    >
+      <p>Hola Mundo</p>
+      </AuthPage>
   );
 }
 
