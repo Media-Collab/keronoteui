@@ -1,83 +1,22 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { Box, Stack, Fab, Typography, IconButton, Modal } from "@mui/material";
-
+import { Box, Stack, Typography, IconButton, Modal } from "@mui/material";
+import { useMediaQuery } from "@mui/material";
 import Icon from "@mdi/react";
 import { mdiHeartOutline, mdiHeart } from "@mdi/js";
 
 interface ItemProps {
+  key: number;
   content: string;
+  currentPage: number;
 }
 
-const Home = () => {
-  const [items, setItems] = useState<string[]>([]);
-  const [page, setPage] = useState<number>(1);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchItems = async () => {
-      setLoading(true);
-
-      // Simulación de datos de items para mostrar en el ejemplo
-      const data: string[] = [
-        "Item 1",
-        "Item 2",
-        "Item 3",
-        "Item 4",
-        "Item 5",
-        "Item 6",
-        "Item 7",
-        "Item 8",
-        "Item 9",
-        "Item 10",
-      ];
-
-      setItems((prevItems) => [...prevItems, ...data]);
-      setLoading(false);
-    };
-
-    fetchItems();
-  }, [page]);
-
-  const handleScroll = () => {
-    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-    if (scrollTop + clientHeight >= scrollHeight * 0.65 && !loading) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  return (
-    <div>
-      <Stack
-        component="div"
-        display="flex"
-        flexWrap="wrap"
-        justifyContent="space-between"
-        alignItems="center"
-        width={"100%"}
-      >
-        {items.map((item, index) => (
-          <Item key={index} content={item} />
-        ))}
-        {loading && <p>Loading...</p>}
-      </Stack>
-      <FloatingButton>{page}</FloatingButton>
-    </div>
-  );
-};
-
-const Item: React.FC<ItemProps> = ({ content }) => {
+const Item: React.FC<ItemProps> = ({ key, content, currentPage }) => {
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
   const [liked, setLiked] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const breakPoint = useMediaQuery("(min-width:900px)");
 
   const handleLike = () => {
     if (liked) {
@@ -112,15 +51,14 @@ const Item: React.FC<ItemProps> = ({ content }) => {
       sx={{
         mt: 1,
         mb: 1,
-        mr: 1,
-        ml: 1,
       }}
+      key={key}
     >
       <Typography
         variant="h6"
         style={{ marginBottom: "auto", fontWeight: "bold" }}
       >
-        {content}
+        {content}-page: {currentPage}
       </Typography>
       <Box position="relative" width={"100%"} height={300}>
         <Image
@@ -138,7 +76,7 @@ const Item: React.FC<ItemProps> = ({ content }) => {
           </IconButton>
           <Typography>{likes} Likes</Typography>
         </Stack>
-        <Typography sx={{mr: 1}}>@{content}</Typography>
+        <Typography sx={{ mr: 1 }}>@{content}</Typography>
       </Stack>
       <Modal
         open={modalOpen}
@@ -157,14 +95,19 @@ const Item: React.FC<ItemProps> = ({ content }) => {
             boxShadow: 24,
             p: 4,
             width: "90%", // Cambia el ancho del modal al 90% del contenedor
-            maxWidth: 600, // Establece un ancho máximo para el modal
-            maxHeight: "555px"
+            maxWidth: "80vw", // Establece un ancho máximo para el modal
+            height: breakPoint ? "40rem" : "70vh",
+            overflow: "auto",
           }}
         >
           <Typography variant="h6" id="modal-title" sx={{ marginBottom: 2 }}>
             {content}
           </Typography>
-          <Box position="relative" width={"100%"} height={"30vw"}>
+          <Box
+            position="relative"
+            width={"100%"}
+            height={breakPoint ? "28rem" : "70vw"}
+          >
             <Image
               src="https://cdn.pixabay.com/photo/2022/12/01/04/35/sunset-7628294_1280.jpg"
               alt="Image"
@@ -175,9 +118,9 @@ const Item: React.FC<ItemProps> = ({ content }) => {
           <Stack direction="column" alignItems="left">
             <IconButton onClick={handleLike} color="primary">
               <Icon path={liked ? mdiHeart : mdiHeartOutline} size={1} />
-            <Typography>{likes} Likes</Typography>
+              <Typography>{likes} Likes</Typography>
             </IconButton>
-            <Typography >@{content}</Typography>
+            <Typography>@{content}</Typography>
           </Stack>
         </Box>
       </Modal>
@@ -185,20 +128,4 @@ const Item: React.FC<ItemProps> = ({ content }) => {
   );
 };
 
-const FloatingButton: React.FC = ({ children }: number) => {
-  return (
-    <Fab
-      style={{
-        position: "fixed",
-        bottom: 20,
-        right: 20,
-        backgroundColor: "#f50057",
-        color: "#fff",
-      }}
-    >
-      <Typography variant="body1">{children}</Typography>
-    </Fab>
-  );
-};
-
-export default Home;
+export default Item;

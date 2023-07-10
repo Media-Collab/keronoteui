@@ -1,21 +1,60 @@
 import { MuiListInferencer } from "@refinedev/inferencer/mui";
 import { GetServerSideProps } from "next";
+import { useState, useEffect } from "react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { authProvider } from "src/authProvider";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-
+import { Fab } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Item from "@components/containers/Item";
 
 export default function BlogPostList() {
+  const [items, setItems] = useState<string[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      setLoading(true);
+
+      // Simulación de datos de items para mostrar en el ejemplo
+      const data: string[] = [
+        "Item 1",
+        "Item 2",
+        "Item 3",
+        "Item 4",
+        "Item 5",
+        "Item 6",
+        "Item 7",
+        "Item 8",
+        "Item 9",
+        "Item 10",
+      ];
+
+      setItems((prevItems: any) => [...prevItems, ...data]);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    };
+
+    fetchItems();
+  }, [page]);
+
+  const handleScroll = () => {
+    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+    if (scrollTop + clientHeight >= scrollHeight * 0.8 && !loading) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <Box sx={{ width: "100%" }}>
       <Typography
@@ -26,73 +65,37 @@ export default function BlogPostList() {
         Popular ^ w ^
       </Typography>
       <Stack
+        component="div"
+        display="flex"
         direction={{ xs: "column", sm: "row" }}
         flexWrap="wrap"
-        justifyContent="center"
+        justifyContent="space-around"
+        alignItems="center"
+        width={"100%"}
       >
-        <Item content="Item" />
-        <Item content="Item" />
-        <Item content="Item" />
-        <Item content="Item" />
-        <Item content="Item" />
-        <Item content="Item" />
-        <Item content="Item" />
-        <Item content="Item" />
-        <Item content="Item" />
+        {items.map((item, index) => (
+          <Item key={index} content={item} currentPage={page} />
+        ))}
+        {loading && <p>Loading...</p>}
       </Stack>
+      <FloatingButton>{page}</FloatingButton>
     </Box>
   );
 }
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
-) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
-
-const Home = () => {
+const FloatingButton = ({ children }: any) => {
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Fab
+      style={{
+        position: "fixed",
+        bottom: 20,
+        right: 20,
+        backgroundColor: "#f50057",
+        color: "#fff",
+      }}
+    >
+      <Typography variant="body1">{children}</Typography>
+    </Fab>
   );
 };
 
@@ -121,8 +124,6 @@ export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
     },
   };
 };
-
-
 
 /* import { MuiListInferencer } from "@refinedev/inferencer/mui";
 import { GetServerSideProps } from "next";
