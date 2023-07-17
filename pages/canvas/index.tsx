@@ -533,6 +533,7 @@ const Canvas = () => {
             flexDirection: "row",
             gap: "1rem",
             alignItems: "center",
+            justifyContent: "space-around",
             padding: "15px",
             backgroundColor: "#BFDBFE",
             borderRadius: "1rem",
