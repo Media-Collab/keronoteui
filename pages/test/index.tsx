@@ -14,6 +14,9 @@ interface IAnimations {
 }
 
 const ProductList: React.FC = () => {
+  
+  const [file, setFile] = useState<any>(null);
+  const [fileUrl, setFileUrl] = useState(null);
   /* const { mutate } = useCreate();
 
   mutate({
@@ -38,8 +41,6 @@ const ProductList: React.FC = () => {
     return <div>Something went wrong!</div>;
   }
 
-  const [file, setFile] = useState<any>(null);
-  const [fileUrl, setFileUrl] = useState(null);
 
   const handleFileChange = (e: any) => {
     setFile(e.target.files[0]);
