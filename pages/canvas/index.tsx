@@ -1,4 +1,5 @@
 "use client";
+import { useKeronote } from "./hooks/keronote";
 import { useEffect, useRef, useState } from "react";
 import Stack from "@mui/material/Stack";
 import Layer from "@components/containers/Layer";
@@ -37,6 +38,17 @@ import {
   mdiInformation,
 } from "@mdi/js";
 
+
+// ---------------
+// Keronote Canvas
+// ---------------
+
+
+
+// -----------------------
+// Define Color Selections
+// -----------------------
+
 let colors = [
   { name: "Eraser", icon: mdiEraser, color: "#000000" },
   { name: "Black", icon: "rectangle", color: "#000000ff" },
@@ -67,6 +79,8 @@ let tools = [
 ];
 
 const Canvas = () => {
+  const canvasRef = useRef<HTMLInputElement>();
+  const [kero, keroActions, keroProps] = useKeronote(canvasRef);
   const breakPoint = useMediaQuery("(min-width:900px)");
   const [modal, setModal] = useState<string | boolean>(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -340,17 +354,20 @@ const Canvas = () => {
           height: "100%",
         }}
       >
-        <canvas
-          id="keronote"
+        <div
           style={{
             backgroundColor: "rgb(255, 255, 255)",
             overflow: "auto",
             borderRadius: "1rem",
+            width: breakPoint ? 900 : 300,
+            height: breakPoint ? 506 : 184
           }}
           // Guarda una proporción de 16:9 para el canvas y que se adapte al tamaño de la pantalla de acuerdo al breakpoint
-          width={breakPoint ? 900 : 300}
-          height={breakPoint ? 506 : 184}
-        ></canvas>
+          //width={breakPoint ? 900 : 300}
+          //height={breakPoint ? 506 : 184}
+        >
+          <canvas ref={canvasRef} width="320" height="240" id="keronote" style={{maxWidth: "100%"}}></canvas>
+        </div>
         <div
           style={{
             display: "flex",
