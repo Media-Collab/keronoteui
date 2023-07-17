@@ -3217,8 +3217,8 @@ kbar@^0.1.0-beta.36:
     tiny-invariant "^1.2.0"
 
 "keronote@github:Media-Collab/keronote":
-  version "1.0.0"
-  resolved "git+ssh://git@github.com/Media-Collab/keronote.git#b0b4479400f11f4b3b4c77366abce28c2af846fc"
+  "resolved" "git+ssh://git@github.com/Media-Collab/keronote.git#7f5bfdb05848d00485326e4dbb6124bbba51133e"
+  "version" "1.0.0"
   dependencies:
     pako "^2.0.4"
 

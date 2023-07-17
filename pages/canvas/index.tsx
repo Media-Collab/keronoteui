@@ -36,6 +36,8 @@ import {
   mdiFormatColorFill,
   mdiContentSave,
   mdiInformation,
+  mdiBackspace,
+  mdiMerge,
 } from "@mdi/js";
 
 // ---------------
@@ -77,9 +79,8 @@ let tools = [
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLInputElement>();
-  const [selectedLayers, setSelectedLayers] = useState<number[]>([]);
+  const [kero, keroProps, keroCanvasActions, keroLayerActions] = useKeronote(canvasRef);
 
-  const [kero, keroActions, keroProps] = useKeronote(canvasRef);
   const breakPoint = useMediaQuery("(min-width:900px)");
   const [modal, setModal] = useState<string | boolean>(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -93,39 +94,31 @@ const Canvas = () => {
   const [toolSelected, setToolSelected] = useState(tools[0]);
   const [colorSelected, setColorSelected] = useState(colors[0]);
 
+  // Color and Tool Callbacks
+  const cbColorChange = (color: any, idx: number) => {
+    keroProps.setColor(idx);
+    setColorSelected(color);
+  }
+
+  const cbToolChange = (color: any, idx: number) => {
+    keroProps.setTool(idx);
+    setToolSelected(color);
+  }
+
   const alertEvent = (e: any) => {
     alert(e.target);
   };
 
   const addLayer = () => {
-    if (layers.length <= 29) {
-      const newLayer = {
-        id: layers.length + 1,
-        name: `Layer ${layers.length + 1}`,
-        isSelect: false,
-      };
-      setLayers([...layers, newLayer]);
-    } else {
-      alert("You can't add more layers");
-    }
+    keroLayerActions.add();
   };
 
   const removeLayer = () => {
-    const filteredLayers = layers.filter(
-      (layer) => !selectedLayers.includes(layer.id)
-    );
-    setLayers(filteredLayers);
-    setSelectedLayers([]);
+    keroLayerActions.remove();
   };
 
   const copyLayer = () => {
-    const selectedLayer = layers.filter((layer) => layer.isSelect === true);
-    const newLayer = {
-      id: selectedLayer[0].id + 1,
-      name: selectedLayer[0].name + " copy",
-      isSelect: false,
-    };
-    setLayers([...layers, newLayer]);
+    keroLayerActions.duplicate();
   };
 
   return (
@@ -207,7 +200,7 @@ const Canvas = () => {
                       margin: "0rem 1rem",
                     }}
                   >
-                    {tools.map((tool) => (
+                    {tools.map((tool, idx) => (
                       <div
                         style={{
                           display: "flex",
@@ -215,7 +208,7 @@ const Canvas = () => {
                           gap: "1rem",
                           alignItems: "center",
                         }}
-                        onClick={() => setToolSelected(tool)}
+                        onClick={() => cbToolChange(tool, idx)}
                       >
                         <Icon path={tool.icon} size={1} />
                         <p>{tool.name}</p>
@@ -273,7 +266,7 @@ const Canvas = () => {
                       margin: "0rem 1rem",
                     }}
                   >
-                    {colors.map((color) => (
+                    {colors.map((color, idx) => (
                       <div
                         style={{
                           display: "flex",
@@ -281,7 +274,7 @@ const Canvas = () => {
                           gap: "1rem",
                           alignItems: "center",
                         }}
-                        onClick={() => setColorSelected(color)}
+                        onClick={() => cbColorChange(color, idx)}
                       >
                         <Icon
                           path={
@@ -298,10 +291,10 @@ const Canvas = () => {
               </Paper>
             </Popper>
           </div>
-          <div onClick={(e) => alertEvent(e)}>
+          <div onClick={(e) => keroLayerActions.undo()}>
             <Icon path={mdiUndo} size={1} />
           </div>
-          <div onClick={(e) => alertEvent(e)}>
+          <div onClick={(e) => keroLayerActions.redo()}>
             <Icon path={mdiRedo} size={1} />
           </div>
           <div onClick={(e) => alertEvent(e)}>
@@ -367,9 +360,9 @@ const Canvas = () => {
             alignItems: "center",
             justifyContent: "center",
           }}
-          // Guarda una proporción de 16:9 para el canvas y que se adapte al tamaño de la pantalla de acuerdo al breakpoint
-          //width={breakPoint ? 900 : 300}
-          //height={breakPoint ? 506 : 184}
+        // Guarda una proporción de 16:9 para el canvas y que se adapte al tamaño de la pantalla de acuerdo al breakpoint
+        //width={breakPoint ? 900 : 300}
+        //height={breakPoint ? 506 : 184}
         >
           <canvas
             ref={canvasRef}
@@ -388,9 +381,6 @@ const Canvas = () => {
         <div
           style={{
             display: "flex",
-            backgroundColor: "#BFDBFE",
-            borderRadius: "1rem",
-            boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
             padding: "10px 10px",
             height: "3rem",
             justifyContent: "space-around",
@@ -398,22 +388,93 @@ const Canvas = () => {
             width: "80%",
           }}
         >
-          <div onClick={(e) => alertEvent(e)}>
-            <Icon path={mdiArrowLeft} size={1} />
+          <div
+            style={{
+              display: "flex",
+              backgroundColor: "#BFDBFE",
+              borderRadius: "1rem",
+              boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+              padding: "10px 10px",
+              height: "3rem",
+              justifyContent: "space-around",
+              alignItems: "center",
+              width: "30%",
+              margin: "4px"
+            }}
+          >
+          <div
+            onClick={(e) => {
+              setModal("save");
+              setAnchorEl(e.currentTarget);
+            }}
+          >
+            <Icon path={mdiContentSave} size={1} />
           </div>
-          <div onClick={(e) => alertEvent(e)}>
-            <Icon path={mdiPause} size={1} />
+          <div
+            onClick={(e) => {
+              setModal("info");
+              setAnchorEl(e.currentTarget);
+            }}
+          >
+            <Icon path={mdiInformation} size={1} />
           </div>
-          <div onClick={(e) => alertEvent(e)}>
-            <Icon path={mdiPlay} size={1} />
           </div>
-          <div onClick={(e) => alertEvent(e)}>
-            <Icon path={mdiStop} size={1} />
+          <div
+            style={{
+              display: "flex",
+              backgroundColor: "#BFDBFE",
+              borderRadius: "1rem",
+              boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+              padding: "10px 10px",
+              height: "3rem",
+              justifyContent: "space-around",
+              alignItems: "center",
+              width: "80%",
+              margin: "4px"
+            }}
+          >
+            <div onClick={(e) => keroCanvasActions.prev()}>
+              <Icon path={mdiArrowLeft} size={1} />
+            </div>
+            <div onClick={(e) => keroCanvasActions.pause()}>
+              <Icon path={mdiPause} size={1} />
+            </div>
+            <div onClick={(e) => keroCanvasActions.play()}>
+              <Icon path={mdiPlay} size={1} />
+            </div>
+            <div onClick={(e) => keroCanvasActions.stop()}>
+              <Icon path={mdiStop} size={1} />
+            </div>
+            <div onClick={(e) => keroCanvasActions.next()}>
+              <Icon path={mdiArrowRight} size={1} />
+            </div>
           </div>
-          <div onClick={(e) => alertEvent(e)}>
-            <Icon path={mdiArrowRight} size={1} />
+          <div
+            style={{
+              display: "flex",
+              backgroundColor: "#BFDBFE",
+              borderRadius: "1rem",
+              boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+              padding: "10px 10px",
+              height: "3rem",
+              justifyContent: "space-around",
+              alignItems: "center",
+              width: "80%",
+              margin: "4px"
+            }}
+          >
+            <div onClick={(e) => keroCanvasActions.add()}>
+              <Icon path={mdiPlus} size={1} />
+            </div>
+            <div onClick={(e) => keroCanvasActions.duplicate()}>
+              <Icon path={mdiContentDuplicate} size={1} />
+            </div>
+            <div onClick={(e) => keroCanvasActions.remove()}>
+              <Icon path={mdiTrashCan} size={1} />
+            </div>
           </div>
         </div>
+
       </section>
       {/* layer view */}
       <section
@@ -447,18 +508,11 @@ const Canvas = () => {
               maxHeight: breakPoint ? "506px" : "184px",
             }}
           >
-            {layers.map((layer: any, index: any) => (
+            {keroProps.layers.map((layer: any, index: any) => (
               <div
-                // onDoubleClick={(e) => {
-                //   setLayers(
-                //     layers.map((layer, i) => {
-                //       if (i === index) {
-                //         layer.isSelect = !layer.isSelect;
-                //       }
-                //       return layer;
-                //     })
-                //   );
-                // }}
+                onClick={(e) => {
+                  keroLayerActions.select(index);
+                }}
                 draggable
                 onDragStart={(e) => {
                   e.dataTransfer.setData("text/plain", index);
@@ -467,19 +521,15 @@ const Canvas = () => {
                   e.preventDefault();
                 }}
                 onDrop={(e) => {
-                  const from = e.dataTransfer.getData("text/plain");
+                  const from = parseInt(e.dataTransfer.getData("text/plain"));
                   const to = index;
-                  const newLayers = layers.slice();
-                  newLayers.splice(to, 0, newLayers.splice(from, 1)[0]);
-                  setLayers(newLayers);
+                  keroLayerActions.swap(from, to);
                 }}
               >
                 <Layer
-                  layer={layer}
-                  layers={layers}
-                  setLayers={setLayers}
-                  selectedLayers={selectedLayers}
-                  setSelectedLayers={setSelectedLayers}
+                  thumb={{}}
+                  id={index}
+                  current={keroProps.currentLayer}
                 />
               </div>
             ))}
@@ -499,62 +549,22 @@ const Canvas = () => {
             gap: "1rem",
           }}
         >
-          <div
-            onClick={(e) => {
-              addLayer();
-            }}
-          >
+          <div onClick={(e) => {addLayer();}}>
             <Icon path={mdiPlus} size={1} />
           </div>
           <div onClick={(e) => copyLayer()}>
             <Icon path={mdiContentDuplicate} size={1} />
           </div>
-          <div
-            onClick={(e) => {
-              removeLayer();
-            }}
-          >
+          <div onClick={(e) => {keroLayerActions.merge();}}>
+            <Icon path={mdiMerge} size={1} />
+          </div>
+          <div onClick={(e) => {keroLayerActions.clear();}}>
+            <Icon path={mdiBackspace} size={1} />
+          </div>
+          <div onClick={(e) => {removeLayer();}}>
             <Icon path={mdiTrashCan} size={1} />
           </div>
         </section>
-      </section>
-      <section
-        style={{
-          display: "absolute",
-          bottom: "10",
-          left: "10",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "1rem",
-            alignItems: "center",
-            justifyContent: "space-around",
-            padding: "15px",
-            backgroundColor: "#BFDBFE",
-            borderRadius: "1rem",
-            boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
-          }}
-        >
-          <div
-            onClick={(e) => {
-              setModal("save");
-              setAnchorEl(e.currentTarget);
-            }}
-          >
-            <Icon path={mdiContentSave} size={1} />
-          </div>
-          <div
-            onClick={(e) => {
-              setModal("info");
-              setAnchorEl(e.currentTarget);
-            }}
-          >
-            <Icon path={mdiInformation} size={1} />
-          </div>
-        </div>
       </section>
       <Modal
         open={modal === "info"}
