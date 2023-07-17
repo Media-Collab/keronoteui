@@ -92,7 +92,7 @@ const Canvas = () => {
     },
   ]);
   const [toolSelected, setToolSelected] = useState(tools[0]);
-  const [colorSelected, setColorSelected] = useState(colors[0]);
+  const [colorSelected, setColorSelected] = useState(colors[1]);
 
   // Color and Tool Callbacks
   const cbColorChange = (color: any, idx: number) => {

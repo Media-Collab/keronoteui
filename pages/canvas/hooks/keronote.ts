@@ -172,7 +172,7 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroC
   const [kero, setKero] = useState(null);
   const [tool, setTool] = useState(0);
   const [size, setSize] = useState(2);
-  const [color, setColor] = useState(0);
+  const [color, setColor] = useState(1);
   const [dither, setDither] = useState(16);
   const [invert, setInvert] = useState(false);
   const [onion, setOnion] = useState(3);
@@ -199,7 +199,11 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroC
 
   // Hook Keronote to Canvas Element
   useEffect(() => {
-    setKero(new KeroContext(canvas.current));
+    let k = new KeroContext(canvas.current);
+    let l = (k.canvas.frame._buffer as Array<KeroLayer>);
+    setLayers([...l]);
+    // Set Keronote
+    setKero(k);
   }, [canvas]);
 
   // Arrange All Setters
