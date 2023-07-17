@@ -8,29 +8,32 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Item from "@components/containers/Item";
+// get data
+import { useList, HttpError } from "@refinedev/core";
+
+interface IAnimations {
+  id: number;
+  title: string;
+  thumbnail: string;
+  username: string;
+  likes: number;
+}
 
 export default function BlogPostList() {
   const [items, setItems] = useState<string[]>([]);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
 
+  const { data, isLoading, isError } = useList<IAnimations, HttpError>({
+    resource: "animation_list",
+  });
+
   useEffect(() => {
     const fetchItems = async () => {
       setLoading(true);
 
       // Simulación de datos de items para mostrar en el ejemplo
-      const data: string[] = [
-        "Item 1",
-        "Item 2",
-        "Item 3",
-        "Item 4",
-        "Item 5",
-        "Item 6",
-        "Item 7",
-        "Item 8",
-        "Item 9",
-        "Item 10",
-      ];
+      const data: string[] = ["Item 1"];
 
       setItems((prevItems: any) => [...prevItems, ...data]);
       setTimeout(() => {
@@ -55,6 +58,16 @@ export default function BlogPostList() {
     };
   }, []);
 
+  const animations = data?.data ?? [];
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Something went wrong!</div>;
+  }
+
   return (
     <Box sx={{ width: "100%" }}>
       <Typography
@@ -73,8 +86,13 @@ export default function BlogPostList() {
         alignItems="center"
         width={"100%"}
       >
-        {items.map((item, index) => (
-          <Item key={index} content={item} currentPage={page} />
+        {/* {animations.map((animation) => (
+          <>
+            <p>{JSON.stringify(animation)}</p>
+          </>
+        ))} */}
+        {animations.map((animation: any) => (
+          <Item content={animation} currentPage={page} />
         ))}
         {loading && <p>Loading...</p>}
       </Stack>

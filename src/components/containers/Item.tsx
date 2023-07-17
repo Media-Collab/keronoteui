@@ -7,12 +7,18 @@ import Icon from "@mdi/react";
 import { mdiHeartOutline, mdiHeart } from "@mdi/js";
 
 interface ItemProps {
-  key: number;
-  content: string;
+  content: {
+    id: string;
+    title: string;
+    thumbnail: string;
+    username: string;
+    likes: number;
+    liked: boolean;
+  };
   currentPage: number;
 }
 
-const Item: React.FC<ItemProps> = ({ key, content, currentPage }) => {
+const Item: React.FC<ItemProps> = ({ content, currentPage }) => {
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
   const [liked, setLiked] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -71,14 +77,14 @@ const Item: React.FC<ItemProps> = ({ key, content, currentPage }) => {
         mt: 1,
         mb: 1,
       }}
-      key={key}
+      key={content.id}
       id="modalinfoo"
     >
       <Typography
         variant="h6"
         style={{ marginBottom: "auto", fontWeight: "bold" }}
       >
-        {content}-page: {currentPage}
+        {content.title || "No title"}-page: {currentPage}
       </Typography>
       <Box
         position="relative"
@@ -89,7 +95,10 @@ const Item: React.FC<ItemProps> = ({ key, content, currentPage }) => {
         }}
       >
         <Image
-          src="https://cdn.pixabay.com/photo/2022/12/01/04/35/sunset-7628294_1280.jpg"
+          src={
+            content.thumbnail ||
+            "https://cdn.pixabay.com/photo/2022/12/01/04/35/sunset-7628294_1280.jpg"
+          }
           alt="Image"
           layout="fill"
           objectFit="cover"
@@ -101,9 +110,9 @@ const Item: React.FC<ItemProps> = ({ key, content, currentPage }) => {
           <IconButton onClick={handleLike} color="primary">
             <Icon path={liked ? mdiHeart : mdiHeartOutline} size={1} />
           </IconButton>
-          <Typography>{likes} Likes</Typography>
+          <Typography>{content.likes || likes} Likes</Typography>
         </Stack>
-        <Typography sx={{ mr: 1 }}>@{content}</Typography>
+        <Typography sx={{ mr: 1 }}>@{content.username || "Err"}</Typography>
       </Stack>
       <Modal
         open={modalOpen}
