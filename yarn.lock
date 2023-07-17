@@ -3216,6 +3216,12 @@
     "react-virtual" "^2.8.2"
     "tiny-invariant" "^1.2.0"
 
+"keronote@github:Media-Collab/keronote":
+  "resolved" "git+ssh://git@github.com/Media-Collab/keronote.git#b0b4479400f11f4b3b4c77366abce28c2af846fc"
+  "version" "1.0.0"
+  dependencies:
+    "pako" "^2.0.4"
+
 "kind-of@^3.0.2", "kind-of@^3.0.3":
   "integrity" "sha512-NOW9QQXMoZGg/oqnVNoNTTIFEIid1627WCffUBJEdMxYApq7mNE7CpzucIPc+ZQg25Phej7IJSmX3hO+oblOtQ=="
   "resolved" "https://registry.npmjs.org/kind-of/-/kind-of-3.2.2.tgz"
@@ -3946,6 +3952,11 @@
   "integrity" "sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ=="
   "resolved" "https://registry.npmjs.org/p-try/-/p-try-2.2.0.tgz"
   "version" "2.2.0"
+
+"pako@^2.0.4":
+  "integrity" "sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug=="
+  "resolved" "https://registry.npmjs.org/pako/-/pako-2.1.0.tgz"
+  "version" "2.1.0"
 
 "papaparse@^5.3.0":
   "integrity" "sha512-HipMsgJkZu8br23pW15uvo6sib6wne/4woLZPlFf3rpDyMe9ywEXUsuD7+6K9PRkJlVT51j/sCOYDKGGS3ZJrw=="
