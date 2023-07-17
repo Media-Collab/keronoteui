@@ -156,7 +156,7 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroC
   const [color, setColor] = useState(0);
   const [dither, setDither] = useState(16);
   const [invert, setInvert] = useState(false);
-  const [onion, setOnion] = useState(0);
+  const [onion, setOnion] = useState(3);
   const [speed, setSpeed] = useState(0);
   // Canvas Internal Status
   const [currentFrame, setCurrentFrame] = useState(0);
@@ -202,15 +202,28 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroC
   // Keronote Canvas Manipulation
   // ----------------------------
 
+  const cbCommonChange = (k: KeroContext) => {
+    // Change Current
+    let f = k.canvas.frame;
+    // Change Layers
+    let l = (f._buffer as Array<KeroLayer>);
+    setLayers([...l]);
+    console.log(k.canvas);
+  }
+
   const cbFrameChange = (cb: KeroCallback) => {
     useDeferKero((k: KeroContext) => {
-      cb(k); setCurrentFrame(k.canvas._current);
+      cb(k);      
+      cbCommonChange(k);
+      setCurrentFrame(k.canvas._current);
     });
   };
 
   const cbLayerChange = (cb: KeroCallback) => {
     useDeferKero((k: KeroContext) => {
-      cb(k); setCurrentLayer(k.canvas.current._current);
+      cb(k);
+      cbCommonChange(k);
+      setCurrentLayer(k.canvas.frame._current);
     });
   };
 
@@ -245,18 +258,6 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroC
   // -------------------
   // Reactive to Changes
   // -------------------
-
-  useEffectKero((k: KeroContext) => {
-    // Change Current
-    let c = k.canvas;
-    c.current = currentFrame;
-    let f = c.frame;
-    f.current = currentLayer;
-    // Change Layers
-    debugger;
-    let l = (f._buffer as Array<KeroLayer>);
-    setLayers([...l]);
-  }, [currentFrame, currentLayer]);
 
   useEffectKero((k: KeroContext) => {
     let draw = k.draw;
