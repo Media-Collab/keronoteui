@@ -2,7 +2,15 @@
 import { useEffect, useRef, useState } from "react";
 import Stack from "@mui/material/Stack";
 import Layer from "@components/containers/Layer";
-import { useMediaQuery } from "@mui/material";
+import {
+  Button,
+  ClickAwayListener,
+  Modal,
+  Paper,
+  Popper,
+  TextField,
+  useMediaQuery,
+} from "@mui/material";
 import Icon from "@mdi/react";
 import {
   mdiEraser,
@@ -16,11 +24,42 @@ import {
   mdiPause,
   mdiArrowLeft,
   mdiArrowRight,
-  mdiPlus,mdiContentDuplicate,mdiTrashCan
+  mdiPlus,
+  mdiContentDuplicate,
+  mdiTrashCan,
+  mdiMinus,
+  mdiRectangleOutline,
+  mdiCircleOutline,
+  mdiRectangle,
+  mdiCircle,
+  mdiFormatColorFill,
+  mdiContentSave,
+  mdiInformation,
 } from "@mdi/js";
+
+let colors = [
+  { name: "Eraser", icon: "eraser", color: "#000000" },
+  { name: "Black", icon: "rectangle", color: "#000000ff" },
+  { name: "Gray", icon: "rectangle", color: "#7f7f7fff" },
+  { name: "White", icon: "rectangle", color: "#ffffffff" },
+  { name: "Red", icon: "rectangle", color: "#ff1010ff" },
+  { name: "Magenta", icon: "rectangle", color: "#ec26c4ff" },
+  { name: "Purple", icon: "rectangle", color: "#a037dbff" },
+  { name: "Blue", icon: "rectangle", color: "#0039ceff" },
+  { name: "Aqua", icon: "rectangle", color: "#14b8cdff" },
+  { name: "Teal", icon: "rectangle", color: "#26d8baff" },
+  { name: "Dark Green", icon: "rectangle", color: "#008431ff" },
+  { name: "Light Green", icon: "rectangle", color: "#65db5dff" },
+  { name: "Grass Green", icon: "rectangle", color: "#86b817ff" },
+  { name: "Yellow", icon: "rectangle", color: "#ffe700ff" },
+  { name: "Orange", icon: "rectangle", color: "#ff8407ff" },
+  { name: "Brown", icon: "rectangle", color: "#814920ff" },
+];
 
 const Canvas = () => {
   const breakPoint = useMediaQuery("(min-width:900px)");
+  const [modal, setModal] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [layers, setLayers] = useState([
     {
       id: 1,
@@ -97,11 +136,193 @@ const Canvas = () => {
             alignItems: "center",
           }}
         >
-          <div onClick={(e) => alertEvent(e)}>
+          <div
+            onClick={(e) => {
+              setModal("tools");
+              setAnchorEl(e.currentTarget);
+            }}
+          >
             <Icon path={mdiBrush} size={1} />
+            <Popper
+              open={modal === "tools"}
+              anchorEl={anchorEl}
+              placement="right-start"
+              disablePortal={false}
+              modifiers={[
+                {
+                  name: "offset",
+                  enabled: true,
+                  options: {
+                    offset: [0, 0],
+                  },
+                },
+              ]}
+            >
+              <Paper
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "#BFDBFE",
+                  borderRadius: "1rem",
+                  boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+                  padding: "10px",
+                }}
+              >
+                <ClickAwayListener onClickAway={() => setModal(false)}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1rem",
+                      margin: "0rem 1rem",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "1rem",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Icon path={mdiBrush} size={1} />
+                      <p>Brush</p>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "1rem",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Icon path={mdiMinus} size={1} />
+                      <p>Line</p>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "1rem",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Icon path={mdiRectangleOutline} size={1} />
+                      <p>Rectangle</p>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "1rem",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Icon path={mdiCircleOutline} size={1} />
+                      <p>Circle</p>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "1rem",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Icon path={mdiRectangle} size={1} />
+                      <p>Rectangle Fill</p>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "1rem",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Icon path={mdiCircle} size={1} />
+                      <p>Circle Fill</p>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: "1rem",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Icon path={mdiFormatColorFill} size={1} />
+                      <p>Bucket Fill</p>
+                    </div>
+                  </div>
+                </ClickAwayListener>
+              </Paper>
+            </Popper>
           </div>
-          <div onClick={(e) => alertEvent(e)}>
+          <div
+            onClick={(e) => {
+              setModal("colors");
+              setAnchorEl(e.currentTarget);
+            }}
+          >
             <Icon path={mdiEraser} size={1} />
+            <Popper
+              open={modal === "colors"}
+              anchorEl={anchorEl}
+              placement="right-start"
+              disablePortal={false}
+              modifiers={[
+                {
+                  name: "offset",
+                  enabled: true,
+                  options: {
+                    offset: [0, 0],
+                  },
+                },
+              ]}
+            >
+              <Paper
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "#BFDBFE",
+                  borderRadius: "1rem",
+                  boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+                  padding: "10px",
+                  maxHeight: "506px",
+                  overflow: "auto",
+                }}
+              >
+                <ClickAwayListener onClickAway={() => setModal(false)}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1rem",
+                      margin: "0rem 1rem",
+                    }}
+                  >
+                    {colors.map((color) => (
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          gap: "1rem",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Icon
+                          path={mdiRectangle}
+                          size={1}
+                          color={color.color}
+                        />
+                        <p>{color.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </ClickAwayListener>
+              </Paper>
+            </Popper>
           </div>
           <div onClick={(e) => alertEvent(e)}>
             <Icon path={mdiUndo} size={1} />
@@ -182,7 +403,7 @@ const Canvas = () => {
             height: "3rem",
             justifyContent: "space-around",
             alignItems: "center",
-            width: "80%"
+            width: "80%",
           }}
         >
           <div onClick={(e) => alertEvent(e)}>
@@ -231,7 +452,6 @@ const Canvas = () => {
               overflow: "auto",
               gap: breakPoint ? "1rem" : "0.5rem",
               borderRadius: "1rem",
-              // El max-height es el tamaño del canvas
               maxHeight: breakPoint ? "506px" : "184px",
             }}
           >
@@ -286,21 +506,129 @@ const Canvas = () => {
               addLayer();
             }}
           >
-            <Icon path={mdiPlus  } size={1} />
+            <Icon path={mdiPlus} size={1} />
           </div>
           <div onClick={(e) => copyLayer()}>
-          <Icon path={mdiContentDuplicate } size={1} />
-            
+            <Icon path={mdiContentDuplicate} size={1} />
           </div>
           <div
             onClick={(e) => {
               removeLayer();
             }}
           >
-            <Icon path={mdiTrashCan } size={1} />
+            <Icon path={mdiTrashCan} size={1} />
           </div>
         </section>
       </section>
+      <section
+        style={{
+          display: "absolute",
+          bottom: "10",
+          left: "10",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: "1rem",
+            alignItems: "center",
+            justifyContent: "space-around",
+            padding: "15px",
+            backgroundColor: "#BFDBFE",
+            borderRadius: "1rem",
+            boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+          }}
+        >
+          <div
+            onClick={(e) => {
+              setModal("save");
+              setAnchorEl(e.currentTarget);
+            }}
+          >
+            <Icon path={mdiContentSave} size={1} />
+          </div>
+          <div
+            onClick={(e) => {
+              setModal("info");
+              setAnchorEl(e.currentTarget);
+            }}
+          >
+            <Icon path={mdiInformation} size={1} />
+          </div>
+        </div>
+      </section>
+      <Modal
+        open={modal === "info"}
+        onClose={() => setModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+            alignItems: "center",
+            padding: "15px",
+            backgroundColor: "#BFDBFE",
+            borderRadius: "1rem",
+            boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+          }}
+        >
+          <h2 id="modal-modal-title">Information</h2>
+          <p id="modal-modal-description">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
+            voluptatum, quibusdam, quia, quod voluptatem voluptate quos
+            voluptates quas quibusdam, quia, quod voluptatem voluptate quos
+          </p>
+        </div>
+      </Modal>
+
+      <Modal
+        open={modal === "save"}
+        onClose={() => setModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+            alignItems: "center",
+            padding: "15px",
+            backgroundColor: "#BFDBFE",
+            borderRadius: "1rem",
+            boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+          }}
+        >
+          <h2 id="modal-modal-title">Save</h2>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1rem",
+              alignItems: "center",
+            }}
+          >
+            <TextField id="outlined-basic" label="Name" variant="filled" />
+            <Button variant="contained" fullWidth>
+              Save
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </Stack>
   );
 };
