@@ -94,6 +94,17 @@ const Canvas = () => {
   const [toolSelected, setToolSelected] = useState(tools[0]);
   const [colorSelected, setColorSelected] = useState(colors[0]);
 
+  // Color and Tool Callbacks
+  const cbColorChange = (color: any, idx: number) => {
+    keroProps.setColor(idx);
+    setColorSelected(color);
+  }
+
+  const cbToolChange = (color: any, idx: number) => {
+    keroProps.setTool(idx);
+    setToolSelected(color);
+  }
+
   const alertEvent = (e: any) => {
     alert(e.target);
   };
@@ -205,7 +216,7 @@ const Canvas = () => {
                       margin: "0rem 1rem",
                     }}
                   >
-                    {tools.map((tool) => (
+                    {tools.map((tool, idx) => (
                       <div
                         style={{
                           display: "flex",
@@ -213,7 +224,7 @@ const Canvas = () => {
                           gap: "1rem",
                           alignItems: "center",
                         }}
-                        onClick={() => setToolSelected(tool)}
+                        onClick={() => cbToolChange(tool, idx)}
                       >
                         <Icon path={tool.icon} size={1} />
                         <p>{tool.name}</p>
@@ -271,7 +282,7 @@ const Canvas = () => {
                       margin: "0rem 1rem",
                     }}
                   >
-                    {colors.map((color) => (
+                    {colors.map((color, idx) => (
                       <div
                         style={{
                           display: "flex",
@@ -279,7 +290,7 @@ const Canvas = () => {
                           gap: "1rem",
                           alignItems: "center",
                         }}
-                        onClick={() => setColorSelected(color)}
+                        onClick={() => cbColorChange(color, idx)}
                       >
                         <Icon
                           path={
