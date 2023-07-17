@@ -36,6 +36,8 @@ import {
   mdiFormatColorFill,
   mdiContentSave,
   mdiInformation,
+  mdiBackspace,
+  mdiMerge,
 } from "@mdi/js";
 
 // ---------------
@@ -77,8 +79,7 @@ let tools = [
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLInputElement>();
-  const [kero, keroProps, keroCanvasActions] = useKeronote(canvasRef);
-  const [selectedLayers, setSelectedLayers] = useState<number[]>([]);
+  const [kero, keroProps, keroCanvasActions, keroLayerActions] = useKeronote(canvasRef);
 
   const breakPoint = useMediaQuery("(min-width:900px)");
   const [modal, setModal] = useState<string | boolean>(false);
@@ -109,34 +110,15 @@ const Canvas = () => {
   };
 
   const addLayer = () => {
-    if (layers.length <= 29) {
-      const newLayer = {
-        id: layers.length + 1,
-        name: `Layer ${layers.length + 1}`,
-        isSelect: false,
-      };
-      setLayers([...layers, newLayer]);
-    } else {
-      alert("You can't add more layers");
-    }
+    keroLayerActions.add();
   };
 
   const removeLayer = () => {
-    const filteredLayers = layers.filter(
-      (layer) => !selectedLayers.includes(layer.id)
-    );
-    setLayers(filteredLayers);
-    setSelectedLayers([]);
+    keroLayerActions.remove();
   };
 
   const copyLayer = () => {
-    const selectedLayer = layers.filter((layer) => layer.isSelect === true);
-    const newLayer = {
-      id: selectedLayer[0].id + 1,
-      name: selectedLayer[0].name + " copy",
-      isSelect: false,
-    };
-    setLayers([...layers, newLayer]);
+    keroLayerActions.duplicate();
   };
 
   return (
@@ -309,10 +291,10 @@ const Canvas = () => {
               </Paper>
             </Popper>
           </div>
-          <div onClick={(e) => alertEvent(e)}>
+          <div onClick={(e) => keroLayerActions.undo()}>
             <Icon path={mdiUndo} size={1} />
           </div>
-          <div onClick={(e) => alertEvent(e)}>
+          <div onClick={(e) => keroLayerActions.redo()}>
             <Icon path={mdiRedo} size={1} />
           </div>
           <div onClick={(e) => alertEvent(e)}>
@@ -526,18 +508,11 @@ const Canvas = () => {
               maxHeight: breakPoint ? "506px" : "184px",
             }}
           >
-            {layers.map((layer: any, index: any) => (
+            {keroProps.layers.map((layer: any, index: any) => (
               <div
-                // onDoubleClick={(e) => {
-                //   setLayers(
-                //     layers.map((layer, i) => {
-                //       if (i === index) {
-                //         layer.isSelect = !layer.isSelect;
-                //       }
-                //       return layer;
-                //     })
-                //   );
-                // }}
+                onClick={(e) => {
+                  keroLayerActions.select(index);
+                }}
                 draggable
                 onDragStart={(e) => {
                   e.dataTransfer.setData("text/plain", index);
@@ -546,19 +521,15 @@ const Canvas = () => {
                   e.preventDefault();
                 }}
                 onDrop={(e) => {
-                  const from = e.dataTransfer.getData("text/plain");
+                  const from = parseInt(e.dataTransfer.getData("text/plain"));
                   const to = index;
-                  const newLayers = layers.slice();
-                  newLayers.splice(to, 0, newLayers.splice(from, 1)[0]);
-                  setLayers(newLayers);
+                  keroLayerActions.swap(from, to);
                 }}
               >
                 <Layer
-                  layer={layer}
-                  layers={layers}
-                  setLayers={setLayers}
-                  selectedLayers={selectedLayers}
-                  setSelectedLayers={setSelectedLayers}
+                  thumb={{}}
+                  id={index}
+                  current={keroProps.currentLayer}
                 />
               </div>
             ))}
@@ -578,21 +549,19 @@ const Canvas = () => {
             gap: "1rem",
           }}
         >
-          <div
-            onClick={(e) => {
-              addLayer();
-            }}
-          >
+          <div onClick={(e) => {addLayer();}}>
             <Icon path={mdiPlus} size={1} />
           </div>
           <div onClick={(e) => copyLayer()}>
             <Icon path={mdiContentDuplicate} size={1} />
           </div>
-          <div
-            onClick={(e) => {
-              removeLayer();
-            }}
-          >
+          <div onClick={(e) => {keroLayerActions.merge();}}>
+            <Icon path={mdiMerge} size={1} />
+          </div>
+          <div onClick={(e) => {keroLayerActions.clear();}}>
+            <Icon path={mdiBackspace} size={1} />
+          </div>
+          <div onClick={(e) => {removeLayer();}}>
             <Icon path={mdiTrashCan} size={1} />
           </div>
         </section>

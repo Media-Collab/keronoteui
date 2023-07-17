@@ -19,6 +19,9 @@ export interface KeroActions {
   // Layer Actions
   addLayer(kero: KeroContext): void;
   duplicateLayer(kero: KeroContext): void;
+  mergeLayer(kero: KeroContext): void;
+  clearLayer(kero: KeroContext): void;
+  swapLayer(kero: KeroContext, idx0: number, idx1: number): void;
   deleteLayer(kero: KeroContext): void;
   selectLayer(kero: KeroContext, idx: number): void;
   undoLayer(kero: KeroContext): void;
@@ -57,8 +60,10 @@ export interface KeroLayerActions {
   // Simple Manipulation
   add(): void;
   duplicate(): void;
-  remove(idx: number): void;
-  removeSelected(): void;
+  merge(): void;
+  clear(): void;
+  swap(idx0: number, idx1: number): void;
+  remove(): void;
   select(idx: number): void;
   // History
   undo(): void;
@@ -129,17 +134,31 @@ let keroActions: KeroActions = {
   duplicateLayer: function(kero: KeroContext) {
     kero.canvas.frame.duplicate();
   },
+  mergeLayer: function(kero: KeroContext) {
+    kero.canvas.frame.merge();
+  },
+  clearLayer: function(kero: KeroContext) {
+    kero.canvas.frame.clear();
+    kero.render();
+  },
+  swapLayer: function(kero: KeroContext, idx0: number, idx1: number) {
+    kero.canvas.frame.swap(idx0, idx1);
+    kero.render();
+  },
   deleteLayer: function(kero: KeroContext) {
     kero.canvas.frame.remove();
+    kero.render();
   },
   selectLayer: function(kero: KeroContext, idx: number) {
     kero.canvas.frame.current = idx;
   },
   undoLayer: function(kero: KeroContext) {
     kero.history.undo();
+    kero.render();
   },
   redoLayer: function(kero: KeroContext) {
     kero.history.redo();
+    kero.render();
   }
 }
 
@@ -247,8 +266,10 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroC
   const keroLayerActions: KeroLayerActions = {
     add: () => cbLayerChange((k: KeroContext) => keroActions.addLayer(k)),
     duplicate: () => cbLayerChange((k: KeroContext) => keroActions.duplicateLayer(k)),
-    remove: (idx: number) => cbLayerChange((k: KeroContext) => keroActions.deleteLayer(k)),
-    removeSelected: () => cbLayerChange((k: KeroContext) => keroActions.deleteLayer(k)),
+    merge: () => cbLayerChange((k: KeroContext) => keroActions.mergeLayer(k)),
+    clear: () => cbLayerChange((k: KeroContext) => keroActions.clearLayer(k)),
+    swap: (idx0: number, idx1: number) => cbLayerChange((k: KeroContext) => keroActions.swapLayer(k, idx0, idx1)),
+    remove: () => cbLayerChange((k: KeroContext) => keroActions.deleteLayer(k)),
     select: (idx: number) => cbLayerChange((k: KeroContext) => keroActions.selectLayer(k, idx)),
     // History Management
     undo: () => cbLayerChange((k: KeroContext) => keroActions.undoLayer(k)),
