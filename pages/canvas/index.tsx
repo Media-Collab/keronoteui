@@ -38,7 +38,7 @@ import {
 } from "@mdi/js";
 
 let colors = [
-  { name: "Eraser", icon: "eraser", color: "#000000" },
+  { name: "Eraser", icon: mdiEraser, color: "#000000" },
   { name: "Black", icon: "rectangle", color: "#000000ff" },
   { name: "Gray", icon: "rectangle", color: "#7f7f7fff" },
   { name: "White", icon: "rectangle", color: "#ffffffff" },
@@ -56,9 +56,19 @@ let colors = [
   { name: "Brown", icon: "rectangle", color: "#814920ff" },
 ];
 
+let tools = [
+  { name: "Brush", icon: mdiBrush },
+  { name: "Line", icon: mdiMinus },
+  { name: "Rectangle", icon: mdiRectangleOutline },
+  { name: "Circle", icon: mdiCircleOutline },
+  { name: "Rectangle Fill", icon: mdiRectangle },
+  { name: "Circle Fill", icon: mdiCircle },
+  { name: "Bucket Fill", icon: mdiFormatColorFill },
+];
+
 const Canvas = () => {
   const breakPoint = useMediaQuery("(min-width:900px)");
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState<string | boolean>(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [layers, setLayers] = useState([
     {
@@ -67,18 +77,24 @@ const Canvas = () => {
       isSelect: true,
     },
   ]);
+  const [toolSelected, setToolSelected] = useState(tools[0]);
+  const [colorSelected, setColorSelected] = useState(colors[0]);
 
   const alertEvent = (e: any) => {
     alert(e.target);
   };
 
   const addLayer = () => {
-    const newLayer = {
-      id: layers.length + 1,
-      name: `Layer ${layers.length + 1}`,
-      isSelect: false,
-    };
-    setLayers([...layers, newLayer]);
+    if (layers.length <= 29) {
+      const newLayer = {
+        id: layers.length + 1,
+        name: `Layer ${layers.length + 1}`,
+        isSelect: false,
+      };
+      setLayers([...layers, newLayer]);
+    } else {
+      alert("You can't add more layers");
+    }
   };
 
   const removeLayer = () => {
@@ -95,8 +111,6 @@ const Canvas = () => {
     };
     setLayers([...layers, newLayer]);
   };
-
-  console.log("layers", layers);
 
   return (
     <Stack
@@ -142,7 +156,7 @@ const Canvas = () => {
               setAnchorEl(e.currentTarget);
             }}
           >
-            <Icon path={mdiBrush} size={1} />
+            <Icon path={toolSelected.icon} size={1} />
             <Popper
               open={modal === "tools"}
               anchorEl={anchorEl}
@@ -177,83 +191,20 @@ const Canvas = () => {
                       margin: "0rem 1rem",
                     }}
                   >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: "1rem",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Icon path={mdiBrush} size={1} />
-                      <p>Brush</p>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: "1rem",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Icon path={mdiMinus} size={1} />
-                      <p>Line</p>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: "1rem",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Icon path={mdiRectangleOutline} size={1} />
-                      <p>Rectangle</p>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: "1rem",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Icon path={mdiCircleOutline} size={1} />
-                      <p>Circle</p>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: "1rem",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Icon path={mdiRectangle} size={1} />
-                      <p>Rectangle Fill</p>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: "1rem",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Icon path={mdiCircle} size={1} />
-                      <p>Circle Fill</p>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: "1rem",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Icon path={mdiFormatColorFill} size={1} />
-                      <p>Bucket Fill</p>
-                    </div>
+                    {tools.map((tool) => (
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          gap: "1rem",
+                          alignItems: "center",
+                        }}
+                        onClick={() => setToolSelected(tool)}
+                      >
+                        <Icon path={tool.icon} size={1} />
+                        <p>{tool.name}</p>
+                      </div>
+                    ))}
                   </div>
                 </ClickAwayListener>
               </Paper>
@@ -265,7 +216,11 @@ const Canvas = () => {
               setAnchorEl(e.currentTarget);
             }}
           >
-            <Icon path={mdiEraser} size={1} />
+            <Icon
+              path={colorSelected.name === "Eraser" ? mdiEraser : mdiRectangle}
+              color={colorSelected.color}
+              size={1}
+            />
             <Popper
               open={modal === "colors"}
               anchorEl={anchorEl}
@@ -310,9 +265,12 @@ const Canvas = () => {
                           gap: "1rem",
                           alignItems: "center",
                         }}
+                        onClick={() => setColorSelected(color)}
                       >
                         <Icon
-                          path={mdiRectangle}
+                          path={
+                            color.name === "Eraser" ? mdiEraser : mdiRectangle
+                          }
                           size={1}
                           color={color.color}
                         />
