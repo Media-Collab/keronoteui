@@ -38,12 +38,9 @@ import {
   mdiInformation,
 } from "@mdi/js";
 
-
 // ---------------
 // Keronote Canvas
 // ---------------
-
-
 
 // -----------------------
 // Define Color Selections
@@ -81,6 +78,9 @@ let tools = [
 const Canvas = () => {
   const canvasRef = useRef<HTMLInputElement>();
   const [kero, keroProps] = useKeronote(canvasRef);
+  const [selectedLayers, setSelectedLayers] = useState<number[]>([]);
+
+  const [kero, keroActions, keroProps] = useKeronote(canvasRef);
   const breakPoint = useMediaQuery("(min-width:900px)");
   const [modal, setModal] = useState<string | boolean>(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -123,8 +123,11 @@ const Canvas = () => {
   };
 
   const removeLayer = () => {
-    const layersToKeep = layers.filter((layer) => layer.isSelect === false);
-    setLayers(layersToKeep);
+    const filteredLayers = layers.filter(
+      (layer) => !selectedLayers.includes(layer.id)
+    );
+    setLayers(filteredLayers);
+    setSelectedLayers([]);
   };
 
   const copyLayer = () => {
@@ -367,17 +370,32 @@ const Canvas = () => {
       >
         <div
           style={{
-            backgroundColor: "rgb(255, 255, 255)",
+            backgroundColor: "rgb(0, 0, 0)",
             overflow: "auto",
             borderRadius: "1rem",
             width: breakPoint ? 900 : 300,
-            height: breakPoint ? 506 : 184
+            height: breakPoint ? 506 : 184,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
           // Guarda una proporción de 16:9 para el canvas y que se adapte al tamaño de la pantalla de acuerdo al breakpoint
           //width={breakPoint ? 900 : 300}
           //height={breakPoint ? 506 : 184}
         >
-          <canvas ref={canvasRef} width="320" height="240" id="keronote" style={{maxWidth: "100%"}}></canvas>
+          <canvas
+            ref={canvasRef}
+            // width="620"
+            width="320"
+            height="240"
+            // height="100%"
+            id="keronote"
+            style={{
+              maxWidth: "100%",
+              height: "100%",
+              backgroundColor: "rgb(255,255, 255)",
+            }}
+          ></canvas>
         </div>
         <div
           style={{
@@ -443,16 +461,16 @@ const Canvas = () => {
           >
             {layers.map((layer: any, index: any) => (
               <div
-                onDoubleClick={(e) => {
-                  setLayers(
-                    layers.map((layer, i) => {
-                      if (i === index) {
-                        layer.isSelect = !layer.isSelect;
-                      }
-                      return layer;
-                    })
-                  );
-                }}
+                // onDoubleClick={(e) => {
+                //   setLayers(
+                //     layers.map((layer, i) => {
+                //       if (i === index) {
+                //         layer.isSelect = !layer.isSelect;
+                //       }
+                //       return layer;
+                //     })
+                //   );
+                // }}
                 draggable
                 onDragStart={(e) => {
                   e.dataTransfer.setData("text/plain", index);
@@ -468,7 +486,13 @@ const Canvas = () => {
                   setLayers(newLayers);
                 }}
               >
-                <Layer layer={layer} layers={layers} setLayers={setLayers} />
+                <Layer
+                  layer={layer}
+                  layers={layers}
+                  setLayers={setLayers}
+                  selectedLayers={selectedLayers}
+                  setSelectedLayers={setSelectedLayers}
+                />
               </div>
             ))}
           </section>
