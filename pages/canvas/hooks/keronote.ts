@@ -1,6 +1,6 @@
 "use client";
-import { KeroContext } from "keronote";
-import { Dispatch, MutableRefObject, SetStateAction, useEffect, useState } from "react";
+import { KeroContext, KeroFrame, KeroLayer } from "keronote";
+import { DependencyList, Dispatch, MutableRefObject, SetStateAction, useEffect, useState } from "react";
 
 export interface KeroActions {
   // Frame Actions
@@ -20,20 +20,49 @@ export interface KeroActions {
   addLayer(kero: KeroContext): void;
   duplicateLayer(kero: KeroContext): void;
   deleteLayer(kero: KeroContext): void;
-  nextLayer(kero: KeroContext): void;
-  prevLayer(kero: KeroContext): void;
+  selectLayer(kero: KeroContext, idx: number): void;
   undoLayer(kero: KeroContext): void;
   redoLayer(kero: KeroContext): void;
 }
 
 export interface KeroProps {
-  setTool: Dispatch<SetStateAction<number>>
-  setSize: Dispatch<SetStateAction<number>>
-  setColor: Dispatch<SetStateAction<number>>
-  setDither: Dispatch<SetStateAction<number>>
-  setInvert: Dispatch<SetStateAction<boolean>>
-  setOnion: Dispatch<SetStateAction<number>>
-  setSpeed: Dispatch<SetStateAction<number>>
+  // Current Frame and Layer
+  currentFrame: number;
+  currentLayer: number;
+  layers: Array<KeroFrame>;
+
+  // Tool and Color Changers
+  setTool: Dispatch<SetStateAction<number>>;
+  setSize: Dispatch<SetStateAction<number>>;
+  setColor: Dispatch<SetStateAction<number>>;
+  setDither: Dispatch<SetStateAction<number>>;
+  setInvert: Dispatch<SetStateAction<boolean>>;
+  setOnion: Dispatch<SetStateAction<number>>;
+  setSpeed: Dispatch<SetStateAction<number>>;
+}
+
+export interface KeroCanvasActions {
+  add(): void;
+  duplicate(): void;
+  remove(): void;
+  next(): void;
+  prev(): void;
+  // Play and Stop
+  play(): void;
+  pause(): void;
+  stop(): void;
+}
+
+export interface KeroLayerActions {
+  // Simple Manipulation
+  add(): void;
+  duplicate(): void;
+  remove(idx: number): void;
+  removeSelected(): void;
+  select(idx: number): void;
+  // History
+  undo(): void;
+  redo(): void;
 }
 
 // -------------
@@ -103,17 +132,8 @@ let keroActions: KeroActions = {
   deleteLayer: function(kero: KeroContext) {
     kero.canvas.frame.remove();
   },
-  nextLayer: function(kero: KeroContext) {
-    let frame, current;
-    frame = kero.canvas.frame;
-    current = frame.current;
-    frame.current = current + 1;
-  },
-  prevLayer: function(kero: KeroContext) {
-    let frame, current;
-    frame = kero.canvas.frame;
-    current = frame.current;
-    frame.current = current - 1;
+  selectLayer: function(kero: KeroContext, idx: number) {
+    kero.canvas.frame.current = idx;
   },
   undoLayer: function(kero: KeroContext) {
     kero.history.undo();
@@ -126,18 +146,49 @@ let keroActions: KeroActions = {
 // ----------------------
 // Keronote Hooks Actions
 // ----------------------
+type KeroCallback = (k: KeroContext) => void;
 
-export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroContext, KeroActions, KeroProps] => {
+
+export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroContext, KeroProps, KeroCanvasActions, KeroLayerActions] => {
   const [kero, setKero] = useState(null);
   const [tool, setTool] = useState(0);
   const [size, setSize] = useState(2);
-  const [color, setColor] = useState(1);
+  const [color, setColor] = useState(0);
   const [dither, setDither] = useState(16);
   const [invert, setInvert] = useState(false);
   const [onion, setOnion] = useState(0);
   const [speed, setSpeed] = useState(0);
+  // Canvas Internal Status
+  const [currentFrame, setCurrentFrame] = useState(0);
+  const [currentLayer, setCurrentLayer] = useState(0);
+  const [layers, setLayers] = useState<Array<KeroFrame> | never[]>([]);
+
+  const useDeferKero = (cb: KeroCallback) => {
+    setTimeout(() => {
+      setKero(k => {
+        cb(k);
+        return k;
+      });
+    });
+  }
+
+  const useEffectKero = (cb: KeroCallback, deps?: DependencyList) => {
+    useEffect(() => {
+      useDeferKero(cb);
+    }, deps);
+  };
+
+  // Hook Keronote to Canvas Element
+  useEffect(() => {
+    setKero(new KeroContext(canvas.current));
+  }, [canvas]);
+
   // Arrange All Setters
   const keroProps: KeroProps = {
+    currentFrame,
+    currentLayer,
+    layers,
+
     setTool,
     setSize,
     setColor,
@@ -147,29 +198,77 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroC
     setSpeed
   };
 
-  // Hook Keronote to Canvas Element
-  useEffect(() => {
-    setKero(new KeroContext(canvas.current));
-  }, [canvas]);
+  // ----------------------------
+  // Keronote Canvas Manipulation
+  // ----------------------------
 
-  // Hook When Updating States
-  useEffect(() => {
-    setTimeout(() => {
-      setKero(k => {
-        let draw = k.draw;
-        draw.tool = tool;
-        draw.size = size;
-        draw.dither = dither;
-        draw.color = color;
-        draw.invert = invert;
-        k.canvas.onion = onion;
-        k.player.speed(speed);
-  
-        return k;
-      });
+  const cbFrameChange = (cb: KeroCallback) => {
+    useDeferKero((k: KeroContext) => {
+      cb(k); setCurrentFrame(k.canvas._current);
     });
+  };
+
+  const cbLayerChange = (cb: KeroCallback) => {
+    useDeferKero((k: KeroContext) => {
+      cb(k); setCurrentLayer(k.canvas.current._current);
+    });
+  };
+
+  const keroCanvasActions: KeroCanvasActions = {
+    add: () => cbFrameChange((k: KeroContext) => keroActions.addFrame(k)),
+    duplicate: () => cbFrameChange((k: KeroContext) => keroActions.duplicateFrame(k)),
+    remove: () => cbFrameChange((k: KeroContext) => keroActions.deleteFrame(k)),
+    // Canvas Steppers
+    next: () => cbFrameChange((k: KeroContext) => keroActions.nextFrame(k)),
+    prev: () => cbFrameChange((k: KeroContext) => keroActions.prevFrame(k)),
+    // Play and Stop
+    play: () => cbFrameChange((k: KeroContext) => keroActions.play(k)),
+    pause: () => cbFrameChange((k: KeroContext) => keroActions.pause(k)),
+    stop: () => cbFrameChange((k: KeroContext) => keroActions.stop(k))
+  };
+
+  // ----------------------------
+  // Keronote Layers Manipulation
+  // ----------------------------
+
+  const keroLayerActions: KeroLayerActions = {
+    add: () => cbLayerChange((k: KeroContext) => keroActions.addLayer(k)),
+    duplicate: () => cbLayerChange((k: KeroContext) => keroActions.duplicateLayer(k)),
+    remove: (idx: number) => cbLayerChange((k: KeroContext) => keroActions.deleteLayer(k)),
+    removeSelected: () => cbLayerChange((k: KeroContext) => keroActions.deleteLayer(k)),
+    select: (idx: number) => cbLayerChange((k: KeroContext) => keroActions.selectLayer(k, idx)),
+    // History Management
+    undo: () => cbLayerChange((k: KeroContext) => keroActions.undoLayer(k)),
+    redo: () => cbLayerChange((k: KeroContext) => keroActions.redoLayer(k)),
+  };
+
+  // -------------------
+  // Reactive to Changes
+  // -------------------
+
+  useEffectKero((k: KeroContext) => {
+    // Change Current
+    let c = k.canvas;
+    c.current = currentFrame;
+    let f = c.frame;
+    f.current = currentLayer;
+    // Change Layers
+    debugger;
+    let l = (f._buffer as Array<KeroLayer>);
+    setLayers([...l]);
+  }, [currentFrame, currentLayer]);
+
+  useEffectKero((k: KeroContext) => {
+    let draw = k.draw;
+    draw.tool = tool;
+    draw.size = size;
+    draw.dither = dither;
+    draw.color = color;
+    draw.invert = invert;
+    k.canvas.onion = onion;
+    k.player.speed(speed);
   }, [tool, size, color, invert, onion, speed]);
 
-  // Return New Context
-  return [kero, keroActions, keroProps];
+  // Return New Keronote Context
+  return [kero, keroProps, keroCanvasActions, keroLayerActions];
 }

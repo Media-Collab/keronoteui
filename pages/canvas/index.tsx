@@ -80,7 +80,7 @@ let tools = [
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLInputElement>();
-  const [kero, keroActions, keroProps] = useKeronote(canvasRef);
+  const [kero, keroProps] = useKeronote(canvasRef);
   const breakPoint = useMediaQuery("(min-width:900px)");
   const [modal, setModal] = useState<string | boolean>(false);
   const [anchorEl, setAnchorEl] = useState(null);
