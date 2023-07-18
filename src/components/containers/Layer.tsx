@@ -1,13 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { KeroContext, KeroPreview } from "keronote";
 import Checkbox from "@mui/material/Checkbox";
 
 const Layer = (props: any) => {
-  const { thumb, id, current } = props;
+  const canvasRef = useRef<HTMLCanvasElement>();
+  const [name, setName] = useState("");
+  const { useKero, id, current } = props;
   // Assign initial name to thumb
-  useEffect(() => {
-    if (!thumb.__uiname)
-      thumb.__uiname = "Layer " + id;
-  }, [thumb]);
+  useKero((k: KeroContext) => {
+    let preview = k.preview;
+    if(canvasRef.current)
+      preview.capture(canvasRef.current, id);
+    // Assign A Name
+    if (!name)
+      setName("Layer " + id);
+  });
 
   return (
     <section
@@ -35,22 +42,38 @@ const Layer = (props: any) => {
             fontWeight: "600",
             border: "none",
           }}
-          value={thumb.__uiname}
+          value={name}
           disabled
           onChange={(e) => {
-            thumb.__uiname = e.target.value;
+            setName(e.target.value);
           }}
         />
       </section>
+      <div
+          style={{
+            backgroundColor: "rgb(0, 0, 0)",
+            overflow: "auto",
+            borderRadius: "0.5rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          // Guarda una proporción de 16:9 para el canvas y que se adapte al tamaño de la pantalla de acuerdo al breakpoint
+          //width={breakPoint ? 900 : 300}
+          //height={breakPoint ? 506 : 184}
+        >
       <canvas
+        width="160"
+        height="120"
+        ref={canvasRef}
+        id={"thumb" + id}
         style={{
-          backgroundColor: "#FFFFFF",
-          width: "100%",
+          width: "80%",
           height: "100%",
-          minWidth: "100px",
-          borderRadius: "0.5rem",
+          backgroundColor: "rgb(255,255, 255)",
         }}
       ></canvas>
+      </div>
     </section>
   );
 };

@@ -166,9 +166,9 @@ let keroActions: KeroActions = {
 // Keronote Hooks Actions
 // ----------------------
 type KeroCallback = (k: KeroContext) => void;
+type KeroDefer = (cb: KeroCallback) => void;
 
-
-export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroContext, KeroProps, KeroCanvasActions, KeroLayerActions] => {
+export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroDefer, KeroProps, KeroCanvasActions, KeroLayerActions] => {
   const [kero, setKero] = useState(null);
   const [tool, setTool] = useState(0);
   const [size, setSize] = useState(2);
@@ -202,6 +202,7 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroC
     let k = new KeroContext(canvas.current);
     let l = (k.canvas.frame._buffer as Array<KeroLayer>);
     setLayers([...l]);
+    // Make Canvas Update Thumbnails
     // Set Keronote
     setKero(k);
   }, [canvas]);
@@ -231,7 +232,10 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroC
     // Change Layers
     let l = (f._buffer as Array<KeroLayer>);
     setLayers([...l]);
+    // Clear Thumbnails
+    k.preview.clear()
     console.log(k.canvas);
+    console.log(k.preview);
   }
 
   const cbFrameChange = (cb: KeroCallback) => {
@@ -296,5 +300,5 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroC
   }, [tool, size, color, invert, onion, speed, dither]);
 
   // Return New Keronote Context
-  return [kero, keroProps, keroCanvasActions, keroLayerActions];
+  return [useDeferKero, keroProps, keroCanvasActions, keroLayerActions];
 }

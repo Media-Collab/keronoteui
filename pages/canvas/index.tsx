@@ -1,4 +1,5 @@
 "use client";
+import { KeroContext } from "keronote";
 import { useKeronote } from "./hooks/keronote";
 import { useEffect, useRef, useState } from "react";
 import Stack from "@mui/material/Stack";
@@ -100,7 +101,7 @@ let patterns = [
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLInputElement>();
-  const [kero, keroProps, keroCanvasActions, keroLayerActions] =
+  const [useKero, keroProps, keroCanvasActions, keroLayerActions] =
     useKeronote(canvasRef);
 
   const breakPoint = useMediaQuery("(min-width:900px)");
@@ -362,7 +363,7 @@ const Canvas = () => {
                       valueLabelDisplay="auto"
                       step={1}
                       min={1}
-                      max={10}
+                      max={64}
                       onChange={(e, value) => {
                         keroProps.setSize(value);
                         setSize(value);
@@ -431,7 +432,7 @@ const Canvas = () => {
                           alignItems: "center",
                         }}
                         onClick={() => {
-                          keroProps.setDither(idx);
+                          keroProps.setDither(patterns.length - idx);
                           setModal(false);
                         }}
                       >
@@ -673,7 +674,7 @@ const Canvas = () => {
                   keroLayerActions.swap(from, to);
                 }}
               >
-                <Layer thumb={{}} id={index} current={keroProps.currentLayer} />
+                <Layer key={index} useKero={useKero} id={index} current={keroProps.currentLayer} />
               </div>
             ))}
           </section>
