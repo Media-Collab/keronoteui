@@ -39,6 +39,7 @@ import {
   mdiInformation,
   mdiBackspace,
   mdiMerge,
+  mdiDotsHorizontal,
 } from "@mdi/js";
 
 // ---------------
@@ -77,6 +78,25 @@ let tools = [
   { name: "Circle Fill", icon: mdiCircle },
   { name: "Bucket Fill", icon: mdiFormatColorFill },
 ];
+
+let patterns = [
+  { name: "2x2 Dot", icon: mdiDotsHorizontal, color: "black" },
+  { name: "2x2 Diagonal", icon: mdiDotsHorizontal, color: "black" },
+  { name: "2x2 Vertical", icon: mdiDotsHorizontal, color: "black" },
+  { name: "2x2 Horizontal", icon: mdiDotsHorizontal, color: "black" },
+  { name: "3x3 Dot", icon: mdiDotsHorizontal, color: "black" },
+  { name: "3x3 Cross", icon: mdiDotsHorizontal, color: "black" },
+  { name: "3x3 Corners Left", icon: mdiDotsHorizontal, color: "black" },
+  { name: "3x3 Corners Right", icon: mdiDotsHorizontal, color: "black" },
+  { name: "4x4 RGSS", icon: mdiDotsHorizontal, color: "black" },
+  { name: "4x4 Two Left", icon: mdiDotsHorizontal, color: "black" },
+  { name: "4x4 Two Right", icon: mdiDotsHorizontal, color: "black" },
+  { name: "5x5 3x3 Cross", icon: mdiDotsHorizontal, color: "black" },
+  { name: "5x5 3x3 Equis", icon: mdiDotsHorizontal, color: "black" },
+  { name: "5x5 Semi Left", icon: mdiDotsHorizontal, color: "black" },
+  { name: "5x5 Semi Right", icon: mdiDotsHorizontal, color: "black" },
+  { name: "No Pattern", icon: "rectangle", color: "black" },
+].reverse();
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLInputElement>();
@@ -359,8 +379,74 @@ const Canvas = () => {
           <div onClick={(e) => keroLayerActions.redo()}>
             <Icon path={mdiRedo} size={1} />
           </div>
-          <div onClick={(e) => alertEvent(e)}>
-            <Icon path={mdiSquare} size={1} />
+          <div
+            onClick={(e) => {
+              setModal("patterns");
+              setAnchorEl(e.currentTarget);
+            }}
+          >
+            <Icon path={mdiDotsHorizontal} size={1} />
+            <Popper
+              open={modal === "patterns"}
+              anchorEl={anchorEl}
+              placement="right-start"
+              disablePortal={false}
+              modifiers={[
+                {
+                  name: "offset",
+                  enabled: true,
+                  options: {
+                    offset: [0, 0],
+                  },
+                },
+              ]}
+            >
+              <Paper
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "#BFDBFE",
+                  borderRadius: "1rem",
+                  boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+                  padding: "10px",
+                  maxHeight: "406px",
+                  overflow: "auto",
+                }}
+              >
+                <ClickAwayListener onClickAway={() => setModal(false)}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1rem",
+                      margin: "0rem 1rem",
+                    }}
+                  >
+                    {patterns.map((pattern, idx) => (
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          gap: "1rem",
+                          alignItems: "center",
+                        }}
+                        onClick={() => {
+                          keroProps.setDither(idx);
+                          setModal(false);
+                        }}
+                      >
+                        <Icon
+                          path={pattern.icon}
+                          size={1}
+                          color={pattern.color}
+                        />
+                        <p>{pattern.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </ClickAwayListener>
+              </Paper>
+            </Popper>
           </div>
           <div onClick={(e) => alertEvent(e)}>
             <Icon path={mdiVectorCombine} size={1} />
