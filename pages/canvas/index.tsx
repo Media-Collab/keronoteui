@@ -41,6 +41,7 @@ import {
   mdiBackspace,
   mdiMerge,
   mdiDotsHorizontal,
+  mdiImage,
 } from "@mdi/js";
 
 // ---------------
@@ -100,6 +101,7 @@ let patterns = [
 ].reverse();
 
 const Canvas = () => {
+  const [temporalBlob, setTemporalBlob] = useState<Blob>(new Blob());
   const canvasRef = useRef<HTMLInputElement>();
   const [useKero, keroProps, keroCanvasActions, keroLayerActions] =
     useKeronote(canvasRef);
@@ -108,15 +110,45 @@ const Canvas = () => {
   const [modal, setModal] = useState<string | boolean>(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [size, setSize] = useState(5);
-  const [layers, setLayers] = useState([
-    {
-      id: 1,
-      name: "Layer 1",
-      isSelect: true,
-    },
-  ]);
   const [toolSelected, setToolSelected] = useState(tools[0]);
   const [colorSelected, setColorSelected] = useState(colors[1]);
+
+  // -------------------------------
+  // Ejemplos de como usar los Blobs
+  // -------------------------------
+
+  const cbSaveTemporalBlob = () => {
+    keroCanvasActions.save((kero: Blob) => {
+      console.log(kero);
+      setTemporalBlob(kero);
+    });
+  }
+
+  const cbLoadTemporalBlob = () => {
+    console.log(temporalBlob);
+    keroCanvasActions.load(temporalBlob);
+  }
+
+  const cbSaveImageBlob = () => {
+    keroCanvasActions.saveThumbnail((img: Blob) => {
+      console.log(img); // Usar img
+
+      const saveBlob = (function () {
+        var a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        return function (blob: Blob, fileName: string) {
+          var url = window.URL.createObjectURL(blob);
+          a.href = url;
+          a.download = fileName;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        };
+      }());
+
+      saveBlob(img, "test.png");
+    })
+  }
 
   // Color and Tool Callbacks
   const cbColorChange = (color: any, idx: number) => {
@@ -553,16 +585,27 @@ const Canvas = () => {
           >
             <div
               onClick={(e) => {
-                setModal("save");
-                setAnchorEl(e.currentTarget);
+                //setModal("save");
+                //setAnchorEl(e.currentTarget);
+                cbSaveTemporalBlob();
               }}
             >
               <Icon path={mdiContentSave} size={1} />
             </div>
             <div
               onClick={(e) => {
-                setModal("info");
-                setAnchorEl(e.currentTarget);
+                //setModal("save");
+                //setAnchorEl(e.currentTarget);
+                cbSaveImageBlob();
+              }}
+            >
+              <Icon path={mdiImage} size={1} />
+            </div>
+            <div
+              onClick={(e) => {
+                //setModal("info");
+                //setAnchorEl(e.currentTarget);
+                cbLoadTemporalBlob();
               }}
             >
               <Icon path={mdiInformation} size={1} />
@@ -791,7 +834,7 @@ const Canvas = () => {
             }}
           >
             <TextField id="outlined-basic" label="Name" variant="filled" />
-            <Button variant="contained" fullWidth>
+            <Button variant="contained" fullWidth onclick>
               Save
             </Button>
           </div>

@@ -2,6 +2,10 @@
 import { KeroContext, KeroFrame, KeroLayer } from "keronote";
 import { DependencyList, Dispatch, MutableRefObject, SetStateAction, useEffect, useState } from "react";
 
+type KeroCallback = (k: KeroContext) => void;
+type KeroDefer = (cb: KeroCallback) => void;
+type KeroBlobCB = (blob: Blob) => void;
+
 export interface KeroActions {
   // Frame Actions
   addFrame(kero: KeroContext): void;
@@ -14,8 +18,8 @@ export interface KeroActions {
   stop(kero: KeroContext): void;
   pause(kero: KeroContext): void;
   // File Actions
-  //save(kero: KeroContext): void;
-  //load(kero: KeroContext): void;
+  save(kero: KeroContext): Blob;
+  load(kero: KeroContext, blob: Blob): Promise<any>;
   // Layer Actions
   addLayer(kero: KeroContext): void;
   duplicateLayer(kero: KeroContext): void;
@@ -54,6 +58,10 @@ export interface KeroCanvasActions {
   play(): void;
   pause(): void;
   stop(): void;
+  // Save and Load
+  save(kero: KeroBlobCB): void;
+  saveThumbnail(thumb: KeroBlobCB): void;
+  load(blob: Blob): void;
 }
 
 export interface KeroLayerActions {
@@ -115,14 +123,13 @@ let keroActions: KeroActions = {
   // Save Actions
   // ------------
   
-  /*
-  function save(kero: KeroContext) {
-    blob = kero.binary.save();
-  }
-  function load(kero: KeroContext) {
-    kero.binary.load(blob);
-  }
-  */
+  
+  save: (kero: KeroContext): Blob => {
+    return kero.binary.save();
+  },
+  load: (kero: KeroContext, blob: Blob) => {
+    return kero.binary.load(blob);
+  },
   
   // -------------
   // Layer Actions
@@ -165,8 +172,6 @@ let keroActions: KeroActions = {
 // ----------------------
 // Keronote Hooks Actions
 // ----------------------
-type KeroCallback = (k: KeroContext) => void;
-type KeroDefer = (cb: KeroCallback) => void;
 
 export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroDefer, KeroProps, KeroCanvasActions, KeroLayerActions] => {
   const [kero, setKero] = useState(null);
@@ -264,7 +269,11 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroD
     // Play and Stop
     play: () => cbFrameChange((k: KeroContext) => keroActions.play(k)),
     pause: () => cbFrameChange((k: KeroContext) => keroActions.pause(k)),
-    stop: () => cbFrameChange((k: KeroContext) => keroActions.stop(k))
+    stop: () => cbFrameChange((k: KeroContext) => keroActions.stop(k)),
+    // Save and Load
+    save: (cb: KeroBlobCB) => cbFrameChange((k: KeroContext) => {cb(keroActions.save(k))}),
+    saveThumbnail: (cb: KeroBlobCB) => cbFrameChange((k: KeroContext) => {k._element.toBlob(cb)}),
+    load: (blob: Blob) => cbFrameChange((k: KeroContext) => {keroActions.load(k, blob).then(e => cbCommonChange(k))})
   };
 
   // ----------------------------
