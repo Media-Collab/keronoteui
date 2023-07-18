@@ -293,7 +293,7 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroC
     draw.invert = invert;
     k.canvas.onion = onion;
     k.player.speed(speed);
-  }, [tool, size, color, invert, onion, speed]);
+  }, [tool, size, color, invert, onion, speed, dither]);
 
   // Return New Keronote Context
   return [kero, keroProps, keroCanvasActions, keroLayerActions];
