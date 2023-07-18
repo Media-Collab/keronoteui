@@ -9,6 +9,7 @@ import {
   Modal,
   Paper,
   Popper,
+  Slider,
   TextField,
   useMediaQuery,
 } from "@mui/material";
@@ -79,11 +80,13 @@ let tools = [
 
 const Canvas = () => {
   const canvasRef = useRef<HTMLInputElement>();
-  const [kero, keroProps, keroCanvasActions, keroLayerActions] = useKeronote(canvasRef);
+  const [kero, keroProps, keroCanvasActions, keroLayerActions] =
+    useKeronote(canvasRef);
 
   const breakPoint = useMediaQuery("(min-width:900px)");
   const [modal, setModal] = useState<string | boolean>(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [size, setSize] = useState(5);
   const [layers, setLayers] = useState([
     {
       id: 1,
@@ -98,12 +101,12 @@ const Canvas = () => {
   const cbColorChange = (color: any, idx: number) => {
     keroProps.setColor(idx);
     setColorSelected(color);
-  }
+  };
 
   const cbToolChange = (color: any, idx: number) => {
     keroProps.setTool(idx);
     setToolSelected(color);
-  }
+  };
 
   const alertEvent = (e: any) => {
     alert(e.target);
@@ -291,6 +294,65 @@ const Canvas = () => {
               </Paper>
             </Popper>
           </div>
+          <div
+            onClick={(e) => {
+              setModal("size");
+              setAnchorEl(e.currentTarget);
+            }}
+          >
+            <Icon path={mdiCircle} size={size ? 0.5 : size / 10} />
+            <Popper
+              open={modal === "size"}
+              anchorEl={anchorEl}
+              placement="right-start"
+              disablePortal={false}
+              modifiers={[
+                {
+                  name: "offset",
+                  enabled: true,
+                  options: {
+                    offset: [0, 0],
+                  },
+                },
+              ]}
+            >
+              <Paper
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "#BFDBFE",
+                  borderRadius: "1rem",
+                  boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+                  padding: "10px",
+                }}
+              >
+                <ClickAwayListener onClickAway={() => setModal(false)}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1rem",
+                      margin: "0rem 1rem",
+                      width: "80px",
+                    }}
+                  >
+                    <Slider
+                      defaultValue={size ?? 5}
+                      aria-label="Small"
+                      valueLabelDisplay="auto"
+                      step={1}
+                      min={1}
+                      max={10}
+                      onChange={(e, value) => {
+                        keroProps.setSize(value);
+                        setSize(value);
+                      }}
+                    />
+                  </div>
+                </ClickAwayListener>
+              </Paper>
+            </Popper>
+          </div>
           <div onClick={(e) => keroLayerActions.undo()}>
             <Icon path={mdiUndo} size={1} />
           </div>
@@ -360,9 +422,9 @@ const Canvas = () => {
             alignItems: "center",
             justifyContent: "center",
           }}
-        // Guarda una proporción de 16:9 para el canvas y que se adapte al tamaño de la pantalla de acuerdo al breakpoint
-        //width={breakPoint ? 900 : 300}
-        //height={breakPoint ? 506 : 184}
+          // Guarda una proporción de 16:9 para el canvas y que se adapte al tamaño de la pantalla de acuerdo al breakpoint
+          //width={breakPoint ? 900 : 300}
+          //height={breakPoint ? 506 : 184}
         >
           <canvas
             ref={canvasRef}
@@ -399,25 +461,25 @@ const Canvas = () => {
               justifyContent: "space-around",
               alignItems: "center",
               width: "30%",
-              margin: "4px"
+              margin: "4px",
             }}
           >
-          <div
-            onClick={(e) => {
-              setModal("save");
-              setAnchorEl(e.currentTarget);
-            }}
-          >
-            <Icon path={mdiContentSave} size={1} />
-          </div>
-          <div
-            onClick={(e) => {
-              setModal("info");
-              setAnchorEl(e.currentTarget);
-            }}
-          >
-            <Icon path={mdiInformation} size={1} />
-          </div>
+            <div
+              onClick={(e) => {
+                setModal("save");
+                setAnchorEl(e.currentTarget);
+              }}
+            >
+              <Icon path={mdiContentSave} size={1} />
+            </div>
+            <div
+              onClick={(e) => {
+                setModal("info");
+                setAnchorEl(e.currentTarget);
+              }}
+            >
+              <Icon path={mdiInformation} size={1} />
+            </div>
           </div>
           <div
             style={{
@@ -430,7 +492,7 @@ const Canvas = () => {
               justifyContent: "space-around",
               alignItems: "center",
               width: "80%",
-              margin: "4px"
+              margin: "4px",
             }}
           >
             <div onClick={(e) => keroCanvasActions.prev()}>
@@ -460,7 +522,7 @@ const Canvas = () => {
               justifyContent: "space-around",
               alignItems: "center",
               width: "80%",
-              margin: "4px"
+              margin: "4px",
             }}
           >
             <div onClick={(e) => keroCanvasActions.add()}>
@@ -474,7 +536,6 @@ const Canvas = () => {
             </div>
           </div>
         </div>
-
       </section>
       {/* layer view */}
       <section
@@ -526,11 +587,7 @@ const Canvas = () => {
                   keroLayerActions.swap(from, to);
                 }}
               >
-                <Layer
-                  thumb={{}}
-                  id={index}
-                  current={keroProps.currentLayer}
-                />
+                <Layer thumb={{}} id={index} current={keroProps.currentLayer} />
               </div>
             ))}
           </section>
@@ -549,19 +606,35 @@ const Canvas = () => {
             gap: "1rem",
           }}
         >
-          <div onClick={(e) => {addLayer();}}>
+          <div
+            onClick={(e) => {
+              addLayer();
+            }}
+          >
             <Icon path={mdiPlus} size={1} />
           </div>
           <div onClick={(e) => copyLayer()}>
             <Icon path={mdiContentDuplicate} size={1} />
           </div>
-          <div onClick={(e) => {keroLayerActions.merge();}}>
+          <div
+            onClick={(e) => {
+              keroLayerActions.merge();
+            }}
+          >
             <Icon path={mdiMerge} size={1} />
           </div>
-          <div onClick={(e) => {keroLayerActions.clear();}}>
+          <div
+            onClick={(e) => {
+              keroLayerActions.clear();
+            }}
+          >
             <Icon path={mdiBackspace} size={1} />
           </div>
-          <div onClick={(e) => {removeLayer();}}>
+          <div
+            onClick={(e) => {
+              removeLayer();
+            }}
+          >
             <Icon path={mdiTrashCan} size={1} />
           </div>
         </section>
