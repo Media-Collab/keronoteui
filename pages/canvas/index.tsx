@@ -121,7 +121,7 @@ const Canvas = () => {
   const cbSaveTemporalBlob = () => {
     keroCanvasActions.save((kero: Blob) => {
       console.log(kero);
-      uploadBlob(kero);
+      const urlBlob = uploadBlob(kero);
       setTemporalBlob(kero);
     });
   };
@@ -134,7 +134,7 @@ const Canvas = () => {
   const cbSaveImageBlob = async () => {
     keroCanvasActions.saveThumbnail((img: Blob) => {
       // save img to cloudinary
-      uploadImage(img);
+      const urlImg = uploadImage(img);
     });
   };
 

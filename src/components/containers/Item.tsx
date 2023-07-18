@@ -140,15 +140,33 @@ const Item: React.FC<ItemProps> = ({ content, currentPage }) => {
           <Box
             position="relative"
             width={"100%"}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
             height={breakPoint ? "26rem" : "70vw"}
           >
-            <Image
+            <canvas
+              // ref={canvasRef}
+              // width="620"
+              width="320"
+              height="240"
+              // height="100%"
+              id="keronote"
+              style={{
+                maxWidth: "100%",
+                height: "100%",
+                backgroundColor: "rgb(0,0, 0)",
+              }}
+            ></canvas>
+            {/*  <Image
               src="https://cdn.pixabay.com/photo/2022/12/01/04/35/sunset-7628294_1280.jpg"
               alt="Image"
               layout="fill"
               objectFit="contain"
               // Añade el evento para activar pantalla completa
-            />
+            /> */}
           </Box>
           <Stack direction="column" alignItems="left">
             <IconButton onClick={handleLike} color="primary">
