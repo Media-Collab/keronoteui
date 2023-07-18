@@ -4,6 +4,7 @@ import { useKeronote } from "./hooks/keronote";
 import { useEffect, useRef, useState } from "react";
 import Stack from "@mui/material/Stack";
 import Layer from "@components/containers/Layer";
+import { uploadImage, uploadBlob } from "./functions";
 import {
   Button,
   ClickAwayListener,
@@ -120,35 +121,22 @@ const Canvas = () => {
   const cbSaveTemporalBlob = () => {
     keroCanvasActions.save((kero: Blob) => {
       console.log(kero);
+      uploadBlob(kero);
       setTemporalBlob(kero);
     });
-  }
+  };
 
   const cbLoadTemporalBlob = () => {
     console.log(temporalBlob);
     keroCanvasActions.load(temporalBlob);
-  }
+  };
 
-  const cbSaveImageBlob = () => {
+  const cbSaveImageBlob = async () => {
     keroCanvasActions.saveThumbnail((img: Blob) => {
-      console.log(img); // Usar img
-
-      const saveBlob = (function () {
-        var a = document.createElement("a");
-        document.body.appendChild(a);
-        a.style = "display: none";
-        return function (blob: Blob, fileName: string) {
-          var url = window.URL.createObjectURL(blob);
-          a.href = url;
-          a.download = fileName;
-          a.click();
-          window.URL.revokeObjectURL(url);
-        };
-      }());
-
-      saveBlob(img, "test.png");
-    })
-  }
+      // save img to cloudinary
+      uploadImage(img);
+    });
+  };
 
   // Color and Tool Callbacks
   const cbColorChange = (color: any, idx: number) => {
@@ -587,6 +575,7 @@ const Canvas = () => {
               onClick={(e) => {
                 //setModal("save");
                 //setAnchorEl(e.currentTarget);
+                // TODO save to cloudinary
                 cbSaveTemporalBlob();
               }}
             >
@@ -596,6 +585,7 @@ const Canvas = () => {
               onClick={(e) => {
                 //setModal("save");
                 //setAnchorEl(e.currentTarget);
+                // TODO
                 cbSaveImageBlob();
               }}
             >
@@ -717,7 +707,12 @@ const Canvas = () => {
                   keroLayerActions.swap(from, to);
                 }}
               >
-                <Layer key={index} useKero={useKero} id={index} current={keroProps.currentLayer} />
+                <Layer
+                  key={index}
+                  useKero={useKero}
+                  id={index}
+                  current={keroProps.currentLayer}
+                />
               </div>
             ))}
           </section>
