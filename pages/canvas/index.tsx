@@ -123,7 +123,7 @@ const Canvas = () => {
   const [size, setSize] = useState(5);
   const [toolSelected, setToolSelected] = useState(tools[0]);
   const [colorSelected, setColorSelected] = useState(colors[1]);
-  const [animationSpeed, setAnimationSpeed] = useState(5);
+  const [animationSpeed, setAnimationSpeed] = useState(8);
 
   const [formValues, setFormValues] = useState<any>({
     urlKero: "",
@@ -804,16 +804,16 @@ const Canvas = () => {
                         flexDirection: "column",
                         gap: "1rem",
                         margin: "0rem 1rem",
-                        width: "80px",
+                        width: "160px",
                       }}
                     >
                       <Slider
-                        defaultValue={animationSpeed ?? 5}
+                        defaultValue={animationSpeed ?? 8}
                         aria-label="Small"
                         valueLabelDisplay="auto"
                         step={1}
                         min={1}
-                        max={10}
+                        max={24}
                         onChange={(e, value) => {
                           keroProps.setSpeed(value);
                           setAnimationSpeed(value);
