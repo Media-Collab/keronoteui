@@ -12,7 +12,8 @@ import routerProvider, {
 } from "@refinedev/nextjs-router";
 import type { NextPage } from "next";
 import { AppProps } from "next/app";
-
+import Icon from "@mdi/react";
+import { mdiTransition, mdiAccountCircle, mdiTestTube } from "@mdi/js";
 import { Header } from "@components/header";
 import { ColorModeContextProvider } from "@contexts";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -78,36 +79,34 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                 {
                   name: "blog_posts",
                   list: "/blog-posts",
-                  create: "/blog-posts/create",
-                  edit: "/blog-posts/edit/:id",
-                  show: "/blog-posts/show/:id",
+                },
+                {
+                  name: "profile",
+                  list: "/profile",
                   meta: {
-                    canDelete: true,
+                    icon: <Icon path={mdiAccountCircle} size={1} />,
                   },
                 },
                 {
-                  name: "categories",
-                  list: "/categories",
-                  create: "/categories/create",
-                  edit: "/categories/edit/:id",
-                  show: "/categories/show/:id",
+                  name: "animations",
+                  list: "/animations",
                   meta: {
-                    canDelete: true,
+                    icon: <Icon path={mdiTransition} size={1} />,
                   },
                 },
                 {
                   name: "canvas",
                   list: "/canvas",
-                  create: "/canvas/create",
-                  edit: "/canvas/edit/:id",
-                  show: "/canvas/show/:id",
                   meta: {
-                    canDelete: true,
+                    icon: <Icon path={mdiTransition} size={1} />,
                   },
                 },
                 {
                   name: "test",
                   list: "/test",
+                  meta: {
+                    icon: <Icon path={mdiTestTube} size={1} />,
+                  },
                 },
               ]}
               options={{

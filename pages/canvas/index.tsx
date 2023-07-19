@@ -2,6 +2,9 @@
 import { KeroContext } from "keronote";
 import { useKeronote } from "./hooks/keronote";
 import { useEffect, useRef, useState } from "react";
+import { GetServerSideProps } from "next";
+import { authProvider } from "src/authProvider";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Stack from "@mui/material/Stack";
 import Layer from "@components/containers/Layer";
 import { uploadImage, uploadBlob } from "./functions";
@@ -894,3 +897,29 @@ const Canvas = () => {
 };
 
 export default Canvas;
+
+export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
+  const { authenticated, redirectTo } = await authProvider.check(context);
+
+  const translateProps = await serverSideTranslations(context.locale ?? "en", [
+    "common",
+  ]);
+
+  if (!authenticated) {
+    return {
+      props: {
+        ...translateProps,
+      },
+      redirect: {
+        destination: `${redirectTo}?to=${encodeURIComponent("/canvas")}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      ...translateProps,
+    },
+  };
+};

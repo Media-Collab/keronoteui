@@ -10,8 +10,9 @@ interface ItemProps {
   content: {
     id: string;
     title: string;
+    kerofile: string;
     thumbnail: string;
-    username: string;
+    user_email: string;
     likes: number;
     liked: boolean;
   };

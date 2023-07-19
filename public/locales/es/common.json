@@ -140,21 +140,21 @@
     }
   },
   "documentTitle": {
-    "default": "refinar",
-    "suffix": " | refinar",
+    "default": "keronote",
+    "suffix": " | keronote",
     "blog_posts": {
-      "list": "Publicaciones de blog | refinar",
-      "show": "#{{id}} Mostrar publicación de blog | refinar",
-      "edit": "#{{id}} Editar publicación de blog | refinar",
-      "create": "Crear nueva publicación de blog | refinar",
-      "clone": "#{{id}} Publicación de blog clonada | refinar"
+      "list": "Publicaciones de blog | keronote",
+      "show": "#{{id}} Mostrar publicación de blog | keronote",
+      "edit": "#{{id}} Editar publicación de blog | keronote",
+      "create": "Crear nueva publicación de blog | keronote",
+      "clone": "#{{id}} Publicación de blog clonada | keronote"
     },
     "categories": {
-      "list": "Categorías | refinar",
-      "show": "#{{id}} Mostrar categoría | refinar",
-      "edit": "#{{id}} Editar Categoría | Refinar",
-      "create": "Crear nueva categoría | refinar",
-      "clone": "#{{id}} Clonar categoría | refinar"
+      "list": "Categorías | keronote",
+      "show": "#{{id}} Mostrar categoría | keronote",
+      "edit": "#{{id}} Editar Categoría | keronote",
+      "create": "Crear nueva categoría | keronote",
+      "clone": "#{{id}} Clonar categoría | keronote"
     }
   },
   "table": {

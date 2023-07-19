@@ -154,28 +154,28 @@
     }
   },
   "documentTitle": {
-    "default": "refine",
-    "suffix": " | refine",
+    "default": "keronote",
+    "suffix": " | keronote",
     "blog_posts": {
-      "list": "Blog Posts | refine",
-      "show": "#{{id}} Show Blog Post | refine",
-      "edit": "#{{id}} Edit Blog Post | refine",
-      "create": "Create new Blog Post | refine",
-      "clone": "#{{id}} Clone Blog Post | refine"
+      "list": "Blog Posts | keronote",
+      "show": "#{{id}} Show Blog Post | keronote",
+      "edit": "#{{id}} Edit Blog Post | keronote",
+      "create": "Create new Blog Post | keronote",
+      "clone": "#{{id}} Clone Blog Post | keronote"
     },
     "categories": {
-      "list": "Categories | refine",
-      "show": "#{{id}} Show Category | refine",
-      "edit": "#{{id}} Edit Category | refine",
-      "create": "Create new Category | refine",
-      "clone": "#{{id}} Clone Category | refine"
+      "list": "Categories | keronote",
+      "show": "#{{id}} Show Category | keronote",
+      "edit": "#{{id}} Edit Category | keronote",
+      "create": "Create new Category | keronote",
+      "clone": "#{{id}} Clone Category | keronote"
     },
     "canvas": {
-      "list": "Categories | refine",
-      "show": "#{{id}} Show Canvas | refine",
-      "edit": "#{{id}} Edit Canvas | refine",
-      "create": "Create new Canvas | refine",
-      "clone": "#{{id}} Clone Canvas | refine"
+      "list": "Canvas | keronote",
+      "show": "#{{id}} Show Canvas | keronote",
+      "edit": "#{{id}} Edit Canvas | keronote",
+      "create": "Create new Canvas | keronote",
+      "clone": "#{{id}} Clone Canvas | keronote"
     }
   },
   "table": {
