@@ -1,10 +1,12 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Box, Stack, Typography, IconButton, Modal } from "@mui/material";
 import { useMediaQuery } from "@mui/material";
 import Icon from "@mdi/react";
 import { mdiHeartOutline, mdiHeart } from "@mdi/js";
+import { KeroContext } from "keronote";
+import { useKeronote } from "pages/canvas/hooks/keronote";
 
 interface ItemProps {
   content: {
@@ -18,13 +20,105 @@ interface ItemProps {
   currentPage: number;
 }
 
+const KeroPlayer: React.FC<any> = ({ blobURL }) => {
+  // Keronote Canvas
+  const canvasRef = useRef<HTMLCanvasElement>();
+  const [useKero, keroProps, keroCanvasActions, keroLayerActions] =
+    useKeronote(canvasRef);
+  // Avoid Editing
+  useKero((k: KeroContext) => {
+    k.lock = true;
+    k.canvas.onion = 0;
+  });
+
+  useEffect(() => {
+    useKero((k: KeroContext) => {
+      // TODO: hacer el fetch del blob cargado
+      fetch(blobURL)
+        .then(res => res.blob())
+        .then(blob => keroCanvasActions.load(blob))
+        .then(blob => keroCanvasActions.play());
+    });
+  }, [blobURL]);
+
+  return <canvas
+    ref={canvasRef}
+    // width="620"
+    width="320"
+    height="240"
+    // height="100%"
+    id="keronote"
+    style={{
+      maxWidth: "100%",
+      height: "100%",
+      backgroundColor: "rgb(255,255,255)",
+    }}
+  ></canvas>
+}
+
+const KeroModal: React.FC<any> = ({ content, modalOpen, handleModalClose, handleLike }) => {
+  const breakPoint = useMediaQuery("(min-width:900px)");
+
+  return <Modal
+    open={modalOpen}
+    onClose={handleModalClose}
+    aria-labelledby="modal-title"
+    aria-describedby="modal-description"
+  >
+    <Box
+      sx={{
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        bgcolor: "background.paper",
+        border: "2px solid #000",
+        boxShadow: 24,
+        p: 4,
+        width: "90%", // Cambia el ancho del modal al 90% del contenedor
+        maxWidth: "80vw", // Establece un ancho máximo para el modal
+        height: breakPoint ? "38rem" : "70vh",
+        overflow: "auto",
+      }}
+    >
+      <Box
+        position="relative"
+        width={"100%"}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        height={breakPoint ? "26rem" : "70vw"}
+      >
+        <KeroPlayer blobURL={content.kerofile} />
+        {/*  <Image
+        src="https://cdn.pixabay.com/photo/2022/12/01/04/35/sunset-7628294_1280.jpg"
+        alt="Image"
+        layout="fill"
+        objectFit="contain"
+        // Añade el evento para activar pantalla completa
+      /> */}
+      </Box>
+      <Stack direction="column" alignItems="left">
+        <IconButton onClick={handleLike} color="primary">
+          {/*<-- Necesito que hagas un useOne para saber si tiene like con el usuario*/}
+          <Icon path={0 ? mdiHeart : mdiHeartOutline} size={1} />
+          <Typography>{content.likes} Likes</Typography>
+        </IconButton>
+
+        {/* close modal */}
+        <IconButton onClick={handleModalClose} color="primary">
+          <Typography>Close</Typography>
+        </IconButton>
+      </Stack>
+    </Box>
+  </Modal>
+}
+
 const Item: React.FC<ItemProps> = ({ content, currentPage }) => {
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
   const [liked, setLiked] = useState(false);
-  const [kerofileData, setKerofileData] = useState(content.kerofile);
-  const [modalOpen, setModalOpen] = useState(false);
-  const breakPoint = useMediaQuery("(min-width:900px)");
-  const fullscreenRef = useRef(null);
 
   const handleLike = () => {
     if (liked) {
@@ -35,30 +129,14 @@ const Item: React.FC<ItemProps> = ({ content, currentPage }) => {
     setLiked(!liked);
   };
 
+  const [modalOpen, setModalOpen] = useState(false);
   const handleModalOpen = () => {
-    activarPantallaCompleta();
+    //activarPantallaCompleta(); ???
     setModalOpen(true);
   };
 
   const handleModalClose = () => {
     setModalOpen(false);
-  };
-
-  const activarPantallaCompleta = () => {
-    const elemento = fullscreenRef.current;
-    const elemento2 = document.getElementById("modalinfoo");
-    // debugger;
-    // if (elemento2) {
-    //   if (elemento2.requestFullscreen) {
-    //     elemento2.requestFullscreen();
-    //   } else if (elemento2.mozRequestFullScreen) {
-    //     elemento2.mozRequestFullScreen();
-    //   } else if (elemento2.webkitRequestFullscreen) {
-    //     elemento2.webkitRequestFullscreen();
-    //   } else if (elemento2.msRequestFullscreen) {
-    //     elemento2.msRequestFullscreen();
-    //   }
-    // }
   };
 
   return (
@@ -115,73 +193,7 @@ const Item: React.FC<ItemProps> = ({ content, currentPage }) => {
         </Stack>
         <Typography sx={{ mr: 1 }}>@{content.user_email || "Err"}</Typography>
       </Stack>
-      <Modal
-        open={modalOpen}
-        onClose={handleModalClose}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-      >
-        <Box
-          ref={fullscreenRef}
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            bgcolor: "background.paper",
-            border: "2px solid #000",
-            boxShadow: 24,
-            p: 4,
-            width: "90%", // Cambia el ancho del modal al 90% del contenedor
-            maxWidth: "80vw", // Establece un ancho máximo para el modal
-            height: breakPoint ? "38rem" : "70vh",
-            overflow: "auto",
-          }}
-        >
-          <Box
-            position="relative"
-            width={"100%"}
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-            height={breakPoint ? "26rem" : "70vw"}
-          >
-            <canvas
-              // ref={canvasRef}
-              // width="620"
-              width="320"
-              height="240"
-              // height="100%"
-              id="keronote"
-              style={{
-                maxWidth: "100%",
-                height: "100%",
-                backgroundColor: "rgb(0,0, 0)",
-              }}
-            ></canvas>
-            {/*  <Image
-              src="https://cdn.pixabay.com/photo/2022/12/01/04/35/sunset-7628294_1280.jpg"
-              alt="Image"
-              layout="fill"
-              objectFit="contain"
-              // Añade el evento para activar pantalla completa
-            /> */}
-          </Box>
-          <Stack direction="column" alignItems="left">
-            <IconButton onClick={handleLike} color="primary">
-              <Icon path={liked ? mdiHeart : mdiHeartOutline} size={1} />
-              <Typography>{likes} Likes</Typography>
-            </IconButton>
-
-            {/* close modal */}
-            <IconButton onClick={handleModalClose} color="primary">
-              <Typography>Close</Typography>
-            </IconButton>
-          </Stack>
-        </Box>
-      </Modal>
+      <KeroModal content={content} modalOpen={modalOpen} handleModalClose={handleModalClose} handleLike={handleLike} />
     </Box>
   );
 };
