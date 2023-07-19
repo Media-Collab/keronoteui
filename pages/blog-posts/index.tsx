@@ -1,3 +1,36 @@
+/**
+ *
+ *
+ *
+ *
+ * DONT EDIT HERE!!!!!!!!!!!!!!!!!!
+ * WORK IN ANIMATIONS FOLDER
+ *
+ *
+ *
+ */
+/**
+ *
+ *
+ *
+ *
+ * DONT EDIT HERE!!!!!!!!!!!!!!!!!!
+ * WORK IN ANIMATIONS FOLDER
+ *
+ *
+ *
+ */
+/**
+ *
+ *
+ *
+ *
+ * DONT EDIT HERE!!!!!!!!!!!!!!!!!!
+ * WORK IN ANIMATIONS FOLDER
+ *
+ *
+ *
+ */
 import { MuiListInferencer } from "@refinedev/inferencer/mui";
 import { GetServerSideProps } from "next";
 import { useState, useEffect } from "react";

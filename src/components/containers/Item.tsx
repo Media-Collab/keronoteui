@@ -26,6 +26,7 @@ const KeroPlayer: React.FC<any> = ({ blobURL }) => {
   const canvasRef = useRef<HTMLCanvasElement>();
   const [useKero, keroProps, keroCanvasActions, keroLayerActions] =
     useKeronote(canvasRef);
+
   // Avoid Editing
   useKero((k: KeroContext) => {
     k.lock = true;
@@ -33,89 +34,40 @@ const KeroPlayer: React.FC<any> = ({ blobURL }) => {
   });
 
   useEffect(() => {
+    // this blob have the url of the blob, no fetch is required
+    console.log("blobURL", blobURL);
     useKero((k: KeroContext) => {
       // TODO: hacer el fetch del blob cargado
       fetch(blobURL)
-        .then(res => res.blob())
-        .then(blob => keroCanvasActions.load(blob))
-        .then(blob => keroCanvasActions.play());
+        .then((res) => res.blob())
+        .then((blob) => {
+          console.log("blob1 ", blob);
+          keroCanvasActions.load(blob);
+        })
+        .then((blob) => {
+          console.log("blob2 ", blob);
+          keroCanvasActions.play();
+        })
+        .catch((error) => console.log("Error durante el fetch:", error));
     });
   }, [blobURL]);
 
-  return <canvas
-    ref={canvasRef}
-    // width="620"
-    width="320"
-    height="240"
-    // height="100%"
-    id="keronote"
-    style={{
-      maxWidth: "100%",
-      height: "100%",
-      backgroundColor: "rgb(255,255,255)",
-    }}
-  ></canvas>
-}
-
-const KeroModal: React.FC<any> = ({ content, modalOpen, handleModalClose, handleLike }) => {
-  const breakPoint = useMediaQuery("(min-width:900px)");
-
-  return <Modal
-    open={modalOpen}
-    onClose={handleModalClose}
-    aria-labelledby="modal-title"
-    aria-describedby="modal-description"
-  >
-    <Box
-      sx={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        bgcolor: "background.paper",
-        border: "2px solid #000",
-        boxShadow: 24,
-        p: 4,
-        width: "90%", // Cambia el ancho del modal al 90% del contenedor
-        maxWidth: "80vw", // Establece un ancho máximo para el modal
-        height: breakPoint ? "38rem" : "70vh",
-        overflow: "auto",
+  return (
+    <canvas
+      ref={canvasRef}
+      // width="620"
+      width="320"
+      height="240"
+      // height="100%"
+      id="keronote"
+      style={{
+        maxWidth: "100%",
+        height: "100%",
+        backgroundColor: "rgb(255,255,255)",
       }}
-    >
-      <Box
-        position="relative"
-        width={"100%"}
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        height={breakPoint ? "26rem" : "70vw"}
-      >
-        <KeroPlayer blobURL={content.kerofile} />
-        {/*  <Image
-        src="https://cdn.pixabay.com/photo/2022/12/01/04/35/sunset-7628294_1280.jpg"
-        alt="Image"
-        layout="fill"
-        objectFit="contain"
-        // Añade el evento para activar pantalla completa
-      /> */}
-      </Box>
-      <Stack direction="column" alignItems="left">
-        <IconButton onClick={handleLike} color="primary">
-          {/*<-- Necesito que hagas un useOne para saber si tiene like con el usuario*/}
-          <Icon path={0 ? mdiHeart : mdiHeartOutline} size={1} />
-          <Typography>{content.likes} Likes</Typography>
-        </IconButton>
-
-        {/* close modal */}
-        <IconButton onClick={handleModalClose} color="primary">
-          <Typography>Close</Typography>
-        </IconButton>
-      </Stack>
-    </Box>
-  </Modal>
-}
+    ></canvas>
+  );
+};
 
 const Item: React.FC<ItemProps> = ({ content, currentPage }) => {
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
@@ -194,8 +146,80 @@ const Item: React.FC<ItemProps> = ({ content, currentPage }) => {
         </Stack>
         <Typography sx={{ mr: 1 }}>@{content.user_email || "Err"}</Typography>
       </Stack>
-      <KeroModal content={content} modalOpen={modalOpen} handleModalClose={handleModalClose} handleLike={handleLike} />
+      <KeroModal
+        content={content}
+        modalOpen={modalOpen}
+        handleModalClose={handleModalClose}
+        handleLike={handleLike}
+      />
     </Box>
+  );
+};
+
+const KeroModal: React.FC<any> = ({
+  content,
+  modalOpen,
+  handleModalClose,
+  handleLike,
+}) => {
+  const breakPoint = useMediaQuery("(min-width:900px)");
+
+  return (
+    <Modal
+      open={modalOpen}
+      onClose={handleModalClose}
+      aria-labelledby="modal-title"
+      aria-describedby="modal-description"
+    >
+      <Box
+        sx={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          bgcolor: "background.paper",
+          border: "2px solid #000",
+          boxShadow: 24,
+          p: 4,
+          width: "90%", // Cambia el ancho del modal al 90% del contenedor
+          maxWidth: "80vw", // Establece un ancho máximo para el modal
+          height: breakPoint ? "38rem" : "70vh",
+          overflow: "auto",
+        }}
+      >
+        <Box
+          position="relative"
+          width={"100%"}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          height={breakPoint ? "26rem" : "70vw"}
+        >
+          <KeroPlayer blobURL={content.kerofile} />
+          {/*  <Image
+        src="https://cdn.pixabay.com/photo/2022/12/01/04/35/sunset-7628294_1280.jpg"
+        alt="Image"
+        layout="fill"
+        objectFit="contain"
+        // Añade el evento para activar pantalla completa
+      /> */}
+        </Box>
+        <Stack direction="column" alignItems="left">
+          <IconButton onClick={handleLike} color="primary">
+            {/*<-- Necesito que hagas un useOne para saber si tiene like con el usuario*/}
+            <Icon path={0 ? mdiHeart : mdiHeartOutline} size={1} />
+            <Typography>{content.likes} Likes</Typography>
+          </IconButton>
+
+          {/* close modal */}
+          <IconButton onClick={handleModalClose} color="primary">
+            <Typography>Close</Typography>
+          </IconButton>
+        </Stack>
+      </Box>
+    </Modal>
   );
 };
 

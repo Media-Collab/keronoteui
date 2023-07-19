@@ -1,4 +1,3 @@
-import { MuiListInferencer } from "@refinedev/inferencer/mui";
 import { GetServerSideProps } from "next";
 import { useState, useEffect } from "react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -20,7 +19,7 @@ interface IAnimations {
   likes: number;
 }
 
-export default function BlogPostList() {
+export default function AnimationsList() {
   const [items, setItems] = useState<string[]>([]);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
@@ -87,10 +86,10 @@ export default function BlogPostList() {
         alignItems="center"
         width={"100%"}
       >
-        {animations.map((animation: any) => (
-          <Item content={animation} currentPage={page} />
+        {animations.map((animation: any, i: number) => (
+          <Item key={i} content={animation} currentPage={page} />
         ))}
-        {/* {loading && <p>Loading...</p>} */}
+        {loading && <p>Loading...</p>}
       </Stack>
       <FloatingButton>{page}</FloatingButton>
     </Box>

@@ -13,7 +13,7 @@ import routerProvider, {
 import type { NextPage } from "next";
 import { AppProps } from "next/app";
 import Icon from "@mdi/react";
-import { mdiTransition, mdiAccountCircle, mdiTestTube } from "@mdi/js";
+import { mdiTransition, mdiAccountCircle, mdiTestTube, mdiDraw } from "@mdi/js";
 import { Header } from "@components/header";
 import { ColorModeContextProvider } from "@contexts";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -77,10 +77,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
               i18nProvider={i18nProvider}
               resources={[
                 {
-                  name: "blog_posts",
-                  list: "/blog-posts",
-                },
-                {
                   name: "profile",
                   list: "/profile",
                   meta: {
@@ -98,7 +94,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                   name: "canvas",
                   list: "/canvas",
                   meta: {
-                    icon: <Icon path={mdiTransition} size={1} />,
+                    icon: <Icon path={mdiDraw} size={1} />,
                   },
                 },
                 {

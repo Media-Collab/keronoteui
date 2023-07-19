@@ -1,6 +1,13 @@
 "use client";
 import { KeroContext, KeroFrame, KeroLayer } from "keronote";
-import { DependencyList, Dispatch, MutableRefObject, SetStateAction, useEffect, useState } from "react";
+import {
+  DependencyList,
+  Dispatch,
+  MutableRefObject,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 
 type KeroCallback = (k: KeroContext) => void;
 type KeroDefer = (cb: KeroCallback) => void;
@@ -88,93 +95,94 @@ let keroActions: KeroActions = {
     kero.canvas.insert();
     kero.render();
   },
-  
-  deleteFrame: function(kero: KeroContext) {
+
+  deleteFrame: function (kero: KeroContext) {
     kero.canvas.remove();
     kero.render();
   },
 
-  duplicateFrame: function(kero: KeroContext) {
+  duplicateFrame: function (kero: KeroContext) {
     kero.canvas.duplicate();
     kero.render();
   },
 
-  nextFrame: function(kero: KeroContext) {
+  nextFrame: function (kero: KeroContext) {
     kero.player.next();
   },
-  prevFrame: function(kero: KeroContext) {
+  prevFrame: function (kero: KeroContext) {
     kero.player.prev();
   },
-  
+
   // --------------
   // Player Actions
   // --------------
-  
-  play: function(kero: KeroContext) {
+
+  play: function (kero: KeroContext) {
     kero.player.play(false, true);
   },
-  stop: function(kero: KeroContext) {
+  stop: function (kero: KeroContext) {
     kero.player.stop(true);
   },
-  pause: function(kero: KeroContext) {
+  pause: function (kero: KeroContext) {
     kero.player.stop(false);
   },
-  
+
   // ------------
   // Save Actions
   // ------------
-  
-  
+
   save: (kero: KeroContext): Blob => {
     return kero.binary.save();
   },
   load: (kero: KeroContext, blob: Blob) => {
     return kero.binary.load(blob);
   },
-  
+
   // -------------
   // Layer Actions
   // -------------
-  
-  addLayer: function(kero: KeroContext) {
+
+  addLayer: function (kero: KeroContext) {
     kero.canvas.frame.insert();
   },
-  duplicateLayer: function(kero: KeroContext) {
+  duplicateLayer: function (kero: KeroContext) {
     kero.canvas.frame.duplicate();
   },
-  mergeLayer: function(kero: KeroContext) {
+  mergeLayer: function (kero: KeroContext) {
     kero.canvas.frame.merge();
   },
-  clearLayer: function(kero: KeroContext) {
+  clearLayer: function (kero: KeroContext) {
     kero.canvas.frame.clear();
     kero.render();
   },
-  swapLayer: function(kero: KeroContext, idx0: number, idx1: number) {
+  swapLayer: function (kero: KeroContext, idx0: number, idx1: number) {
     kero.canvas.frame.swap(idx0, idx1);
     kero.render();
   },
-  deleteLayer: function(kero: KeroContext) {
+  deleteLayer: function (kero: KeroContext) {
     kero.canvas.frame.remove();
     kero.render();
   },
-  selectLayer: function(kero: KeroContext, idx: number) {
+  selectLayer: function (kero: KeroContext, idx: number) {
     kero.canvas.frame.current = idx;
   },
-  undoLayer: function(kero: KeroContext) {
+  undoLayer: function (kero: KeroContext) {
     kero.history.undo();
     kero.render();
   },
-  redoLayer: function(kero: KeroContext) {
+  redoLayer: function (kero: KeroContext) {
     kero.history.redo();
     kero.render();
-  }
-}
+  },
+};
 
 // ----------------------
 // Keronote Hooks Actions
 // ----------------------
 
-export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroDefer, KeroProps, KeroCanvasActions, KeroLayerActions] => {
+export const useKeronote = (
+  canvas: MutableRefObject<HTMLCanvasElement>
+): [KeroDefer, KeroProps, KeroCanvasActions, KeroLayerActions] => {
   const [kero, setKero] = useState(null);
   const [tool, setTool] = useState(0);
   const [size, setSize] = useState(2);
@@ -190,12 +198,12 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroD
 
   const useDeferKero = (cb: KeroCallback) => {
     setTimeout(() => {
-      setKero(k => {
+      setKero((k) => {
         cb(k);
         return k;
       });
     });
-  }
+  };
 
   const useEffectKero = (cb: KeroCallback, deps?: DependencyList) => {
     useEffect(() => {
@@ -206,7 +214,7 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroD
   // Hook Keronote to Canvas Element
   useEffect(() => {
     let k = new KeroContext(canvas.current);
-    let l = (k.canvas.frame._buffer as Array<KeroLayer>);
+    let l = k.canvas.frame._buffer as Array<KeroLayer>;
     setLayers([...l]);
     // Make Canvas Update Thumbnails
     // Set Keronote
@@ -226,7 +234,7 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroD
     setDither,
     setInvert,
     setOnion,
-    setSpeed
+    setSpeed,
   };
 
   // ----------------------------
@@ -237,17 +245,17 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroD
     // Change Current
     let f = k.canvas.frame;
     // Change Layers
-    let l = (f._buffer as Array<KeroLayer>);
+    let l = f._buffer as Array<KeroLayer>;
     setLayers([...l]);
     // Clear Thumbnails
-    k.preview.clear()
+    k.preview.clear();
     console.log(k.canvas);
     console.log(k.preview);
-  }
+  };
 
   const cbFrameChange = (cb: KeroCallback) => {
     useDeferKero((k: KeroContext) => {
-      cb(k);      
+      cb(k);
       cbCommonChange(k);
       setCurrentFrame(k.canvas._current);
     });
@@ -263,7 +271,8 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroD
 
   const keroCanvasActions: KeroCanvasActions = {
     add: () => cbFrameChange((k: KeroContext) => keroActions.addFrame(k)),
-    duplicate: () => cbFrameChange((k: KeroContext) => keroActions.duplicateFrame(k)),
+    duplicate: () =>
+      cbFrameChange((k: KeroContext) => keroActions.duplicateFrame(k)),
     remove: () => cbFrameChange((k: KeroContext) => keroActions.deleteFrame(k)),
     // Canvas Steppers
     next: () => cbFrameChange((k: KeroContext) => keroActions.nextFrame(k)),
@@ -273,9 +282,19 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroD
     pause: () => cbFrameChange((k: KeroContext) => keroActions.pause(k)),
     stop: () => cbFrameChange((k: KeroContext) => keroActions.stop(k)),
     // Save and Load
-    save: (cb: KeroBlobCB) => cbFrameChange((k: KeroContext) => {cb(keroActions.save(k))}),
-    saveThumbnail: (cb: KeroBlobCB) => cbFrameChange((k: KeroContext) => {k._element.toBlob(cb)}),
-    load: (blob: Blob) => cbFrameChange((k: KeroContext) => {keroActions.load(k, blob).then(e => cbCommonChange(k))})
+    save: (cb: KeroBlobCB) =>
+      cbFrameChange((k: KeroContext) => {
+        cb(keroActions.save(k));
+      }),
+    saveThumbnail: (cb: KeroBlobCB) =>
+      cbFrameChange((k: KeroContext) => {
+        k._element.toBlob(cb);
+      }),
+    load: (blob: Blob) =>
+      cbFrameChange((k: KeroContext) => {
+        console.log("keroActions load: ", keroActions);
+        keroActions.load(k, blob).then((e) => cbCommonChange(k));
+      }),
   };
 
   // ----------------------------
@@ -284,12 +303,15 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroD
 
   const keroLayerActions: KeroLayerActions = {
     add: () => cbLayerChange((k: KeroContext) => keroActions.addLayer(k)),
-    duplicate: () => cbLayerChange((k: KeroContext) => keroActions.duplicateLayer(k)),
+    duplicate: () =>
+      cbLayerChange((k: KeroContext) => keroActions.duplicateLayer(k)),
     merge: () => cbLayerChange((k: KeroContext) => keroActions.mergeLayer(k)),
     clear: () => cbLayerChange((k: KeroContext) => keroActions.clearLayer(k)),
-    swap: (idx0: number, idx1: number) => cbLayerChange((k: KeroContext) => keroActions.swapLayer(k, idx0, idx1)),
+    swap: (idx0: number, idx1: number) =>
+      cbLayerChange((k: KeroContext) => keroActions.swapLayer(k, idx0, idx1)),
     remove: () => cbLayerChange((k: KeroContext) => keroActions.deleteLayer(k)),
-    select: (idx: number) => cbLayerChange((k: KeroContext) => keroActions.selectLayer(k, idx)),
+    select: (idx: number) =>
+      cbLayerChange((k: KeroContext) => keroActions.selectLayer(k, idx)),
     // History Management
     undo: () => cbLayerChange((k: KeroContext) => keroActions.undoLayer(k)),
     redo: () => cbLayerChange((k: KeroContext) => keroActions.redoLayer(k)),
@@ -299,28 +321,43 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroD
   // Reactive to Changes
   // -------------------
 
-  useEffectKero((k: KeroContext) => {
-    let draw = k.draw;
-    draw.tool = tool;
-    draw.size = size;
-    draw.dither = dither;
-    draw.color = color;
-    draw.invert = invert;
-  }, [tool, size, color, invert, dither]);
+  useEffectKero(
+    (k: KeroContext) => {
+      let draw = k.draw;
+      draw.tool = tool;
+      draw.size = size;
+      draw.dither = dither;
+      draw.color = color;
+      draw.invert = invert;
+    },
+    [tool, size, color, invert, dither]
+  );
 
-  useEffectKero((k: KeroContext) => {
-    k.canvas.onion = onion;
-    // Force Rendering
-    k.render();
-  }, [onion]);
+  useEffectKero(
+    (k: KeroContext) => {
+      k.canvas.onion = onion;
+      // Force Rendering
+      k.render();
+    },
+    [onion]
+  );
 
-  useEffectKero((k: KeroContext) => {
-    // Calculate Frame Speed
-    let s = Math.floor(1000 / speed);
-    k.player.speed(s);
-    k.player.replay();
-  }, [speed]);
+  useEffectKero(
+    (k: KeroContext) => {
+      try {
+        console.log("KeroContext: ", k);
+        // Calculate Frame Speed
+        let s = Math.floor(1000 / speed);
+        k.player.speed(s);
+        // FIXME: Error in k.player
+        // k.player.replay();
+      } catch (e) {
+        console.log("useEffectKero err:", e);
+      }
+    },
+    [speed]
+  );
 
   // Return New Keronote Context
   return [useDeferKero, keroProps, keroCanvasActions, keroLayerActions];
-}
+};
