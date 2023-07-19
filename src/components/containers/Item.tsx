@@ -21,6 +21,7 @@ interface ItemProps {
 const Item: React.FC<ItemProps> = ({ content, currentPage }) => {
   const [likes, setLikes] = useState(Math.floor(Math.random() * 100));
   const [liked, setLiked] = useState(false);
+  const [kerofileData, setKerofileData] = useState(content.kerofile);
   const [modalOpen, setModalOpen] = useState(false);
   const breakPoint = useMediaQuery("(min-width:900px)");
   const fullscreenRef = useRef(null);
@@ -112,7 +113,7 @@ const Item: React.FC<ItemProps> = ({ content, currentPage }) => {
           </IconButton>
           <Typography>{content.likes || likes} Likes</Typography>
         </Stack>
-        <Typography sx={{ mr: 1 }}>@{content.username || "Err"}</Typography>
+        <Typography sx={{ mr: 1 }}>@{content.user_email || "Err"}</Typography>
       </Stack>
       <Modal
         open={modalOpen}

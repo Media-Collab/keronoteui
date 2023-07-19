@@ -15,6 +15,7 @@ interface IAnimations {
   id: number;
   title: string;
   thumbnail: string;
+  kerofile: string;
   username: string;
   likes: number;
 }
@@ -28,14 +29,16 @@ export default function BlogPostList() {
     resource: "animation_list",
   });
 
+  const animations = data?.data ?? [];
+
   useEffect(() => {
     const fetchItems = async () => {
       setLoading(true);
 
       // Simulación de datos de items para mostrar en el ejemplo
-      const data: string[] = ["Item 1"];
+      const data2: string[] = ["Item 1"];
 
-      setItems((prevItems: any) => [...prevItems, ...data]);
+      setItems((prevItems: any) => [...prevItems, ...data2]);
       setTimeout(() => {
         setLoading(false);
       }, 2000);
@@ -57,8 +60,6 @@ export default function BlogPostList() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
-  const animations = data?.data ?? [];
 
   if (isLoading) {
     return <div>Loading...</div>;

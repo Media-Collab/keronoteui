@@ -44,6 +44,7 @@ import {
   mdiDotsHorizontal,
   mdiImage,
 } from "@mdi/js";
+import { useGetIdentity, useCreate } from "@refinedev/core";
 
 // ---------------
 // Keronote Canvas
@@ -114,6 +115,29 @@ const Canvas = () => {
   const [toolSelected, setToolSelected] = useState(tools[0]);
   const [colorSelected, setColorSelected] = useState(colors[1]);
 
+  const [formValues, setFormValues] = useState<any>({
+    urlKero: "",
+    urlImage: "",
+    title: "default",
+  });
+  const { data: person } = useGetIdentity<any>();
+  const { mutate } = useCreate();
+
+  // console.log("info:", person);
+
+  const saveAnimation = () => {
+    mutate({
+      resource: "animations",
+      values: {
+        kerofile: formValues.urlKero,
+        thumbnail: formValues.urlImage,
+        title: formValues.title,
+        user_id: person.id || "default",
+        user_email: person.name.split("@")[0] || "default",
+      },
+    });
+    alert("view on the supabase");
+  };
   // -------------------------------
   // Ejemplos de como usar los Blobs
   // -------------------------------
@@ -122,6 +146,12 @@ const Canvas = () => {
     keroCanvasActions.save((kero: Blob) => {
       console.log(kero);
       const urlBlob = uploadBlob(kero);
+      urlBlob.then((urlKero) => {
+        setFormValues({
+          ...formValues,
+          urlKero,
+        });
+      });
       setTemporalBlob(kero);
     });
   };
@@ -135,6 +165,12 @@ const Canvas = () => {
     keroCanvasActions.saveThumbnail((img: Blob) => {
       // save img to cloudinary
       const urlImg = uploadImage(img);
+      urlImg.then((urlImage) => {
+        setFormValues({
+          ...formValues,
+          urlImage,
+        });
+      });
     });
   };
 
@@ -593,9 +629,11 @@ const Canvas = () => {
             </div>
             <div
               onClick={(e) => {
-                //setModal("info");
+                e.preventDefault();
+                // setModal("info");
+                setModal("save");
                 //setAnchorEl(e.currentTarget);
-                cbLoadTemporalBlob();
+                // cbLoadTemporalBlob();
               }}
             >
               <Icon path={mdiInformation} size={1} />
@@ -820,7 +858,7 @@ const Canvas = () => {
           }}
         >
           <h2 id="modal-modal-title">Save</h2>
-          <div
+          <section
             style={{
               display: "flex",
               flexDirection: "column",
@@ -828,11 +866,27 @@ const Canvas = () => {
               alignItems: "center",
             }}
           >
-            <TextField id="outlined-basic" label="Name" variant="filled" />
-            <Button variant="contained" fullWidth onclick>
+            <TextField
+              id="outlined-basic"
+              label="Name"
+              variant="filled"
+              onChange={(e) => {
+                setFormValues({
+                  ...formValues,
+                  title: e.target.value,
+                });
+              }}
+            />
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => {
+                saveAnimation();
+              }}
+            >
               Save
             </Button>
-          </div>
+          </section>
         </div>
       </Modal>
     </Stack>
