@@ -37,6 +37,7 @@ export interface KeroProps {
   currentFrame: number;
   currentLayer: number;
   layers: Array<KeroFrame>;
+  speed: number;
 
   // Tool and Color Changers
   setTool: Dispatch<SetStateAction<number>>;
@@ -217,6 +218,7 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroD
     currentFrame,
     currentLayer,
     layers,
+    speed,
 
     setTool,
     setSize,
