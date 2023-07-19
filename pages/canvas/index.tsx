@@ -46,6 +46,8 @@ import {
   mdiMerge,
   mdiDotsHorizontal,
   mdiImage,
+  mdiVectorSquareClose,
+  mdiSpeedometer,
 } from "@mdi/js";
 import { useGetIdentity, useCreate } from "@refinedev/core";
 
@@ -105,6 +107,13 @@ let patterns = [
   { name: "No Pattern", icon: "rectangle", color: "black" },
 ].reverse();
 
+let onions = [
+  { name: "No Onion", icon: mdiRectangle, color: "black" },
+  { name: "Ghost 1", icon: mdiVectorSquareClose, color: "black" },
+  { name: "Ghost 2", icon: mdiVectorSquareClose, color: "black" },
+  { name: "Ghost 3", icon: mdiVectorSquareClose, color: "black" },
+];
+
 const Canvas = () => {
   const [temporalBlob, setTemporalBlob] = useState<Blob>(new Blob());
   const canvasRef = useRef<HTMLInputElement>();
@@ -117,6 +126,7 @@ const Canvas = () => {
   const [size, setSize] = useState(5);
   const [toolSelected, setToolSelected] = useState(tools[0]);
   const [colorSelected, setColorSelected] = useState(colors[1]);
+  const [animationSpeed, setAnimationSpeed] = useState(8);
 
   const [formValues, setFormValues] = useState<any>({
     urlKero: "",
@@ -508,8 +518,71 @@ const Canvas = () => {
               </Paper>
             </Popper>
           </div>
-          <div onClick={(e) => alertEvent(e)}>
+          <div
+            onClick={(e) => {
+              setModal("onions");
+              setAnchorEl(e.currentTarget);
+            }}
+          >
             <Icon path={mdiVectorCombine} size={1} />
+            <Popper
+              open={modal === "onions"}
+              anchorEl={anchorEl}
+              placement="right-start"
+              disablePortal={false}
+              modifiers={[
+                {
+                  name: "offset",
+                  enabled: true,
+                  options: {
+                    offset: [0, 0],
+                  },
+                },
+              ]}
+            >
+              <Paper
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "#BFDBFE",
+                  borderRadius: "1rem",
+                  boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+                  padding: "10px",
+                  maxHeight: "406px",
+                  overflow: "auto",
+                }}
+              >
+                <ClickAwayListener onClickAway={() => setModal(false)}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "1rem",
+                      margin: "0rem 1rem",
+                    }}
+                  >
+                    {onions.map((onion, idx) => (
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          gap: "1rem",
+                          alignItems: "center",
+                        }}
+                        onClick={() => {
+                          keroProps.setOnion(idx);
+                          setModal(false);
+                          console.log(idx);
+                        }}
+                      >
+                        <Icon path={onion.icon} size={1} color={onion.color} />
+                        <p>{onion.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </ClickAwayListener>
+              </Paper>
+            </Popper>
           </div>
           {/* <section
             style={{
@@ -694,6 +767,65 @@ const Canvas = () => {
             </div>
             <div onClick={(e) => keroCanvasActions.remove()}>
               <Icon path={mdiTrashCan} size={1} />
+            </div>
+            <div
+              onClick={(e) => {
+                setModal("speed");
+                setAnchorEl(e.currentTarget);
+              }}
+            >
+              <Icon path={mdiSpeedometer} size={1} />
+              <Popper
+                open={modal === "speed"}
+                anchorEl={anchorEl}
+                placement="right-start"
+                disablePortal={false}
+                modifiers={[
+                  {
+                    name: "offset",
+                    enabled: true,
+                    options: {
+                      offset: [0, 0],
+                    },
+                  },
+                ]}
+              >
+                <Paper
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "#BFDBFE",
+                    borderRadius: "1rem",
+                    boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
+                    padding: "10px",
+                  }}
+                >
+                  <ClickAwayListener onClickAway={() => setModal(false)}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "1rem",
+                        margin: "0rem 1rem",
+                        width: "160px",
+                      }}
+                    >
+                      <Slider
+                        defaultValue={animationSpeed ?? 8}
+                        aria-label="Small"
+                        valueLabelDisplay="auto"
+                        step={1}
+                        min={1}
+                        max={24}
+                        onChange={(e, value) => {
+                          keroProps.setSpeed(value);
+                          setAnimationSpeed(value);
+                        }}
+                      />
+                    </div>
+                  </ClickAwayListener>
+                </Paper>
+              </Popper>
             </div>
           </div>
         </div>

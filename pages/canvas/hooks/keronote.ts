@@ -37,6 +37,7 @@ export interface KeroProps {
   currentFrame: number;
   currentLayer: number;
   layers: Array<KeroFrame>;
+  speed: number;
 
   // Tool and Color Changers
   setTool: Dispatch<SetStateAction<number>>;
@@ -181,7 +182,7 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroD
   const [dither, setDither] = useState(16);
   const [invert, setInvert] = useState(false);
   const [onion, setOnion] = useState(3);
-  const [speed, setSpeed] = useState(0);
+  const [speed, setSpeed] = useState(8);
   // Canvas Internal Status
   const [currentFrame, setCurrentFrame] = useState(0);
   const [currentLayer, setCurrentLayer] = useState(0);
@@ -217,6 +218,7 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroD
     currentFrame,
     currentLayer,
     layers,
+    speed,
 
     setTool,
     setSize,
@@ -304,9 +306,20 @@ export const useKeronote = (canvas: MutableRefObject<HTMLCanvasElement>): [KeroD
     draw.dither = dither;
     draw.color = color;
     draw.invert = invert;
+  }, [tool, size, color, invert, dither]);
+
+  useEffectKero((k: KeroContext) => {
     k.canvas.onion = onion;
-    k.player.speed(speed);
-  }, [tool, size, color, invert, onion, speed, dither]);
+    // Force Rendering
+    k.render();
+  }, [onion]);
+
+  useEffectKero((k: KeroContext) => {
+    // Calculate Frame Speed
+    let s = Math.floor(1000 / speed);
+    k.player.speed(s);
+    k.player.replay();
+  }, [speed]);
 
   // Return New Keronote Context
   return [useDeferKero, keroProps, keroCanvasActions, keroLayerActions];

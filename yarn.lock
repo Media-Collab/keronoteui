@@ -3222,7 +3222,7 @@
     "tiny-invariant" "^1.2.0"
 
 "keronote@github:Media-Collab/keronote":
-  "resolved" "git+ssh://git@github.com/Media-Collab/keronote.git#3c7cbc3acd41eff8eb13c85fa1f95ee1bd3fb2a0"
+  "resolved" "git+ssh://git@github.com/Media-Collab/keronote.git#67a257b3613653fe0cb042e4e8b66a703c71f79e"
   "version" "1.0.0"
   dependencies:
     "pako" "^2.0.4"
