@@ -739,14 +739,9 @@
   "resolved" "https://registry.npmjs.org/@next/env/-/env-13.4.7.tgz"
   "version" "13.4.7"
 
-"@next/swc-linux-x64-gnu@13.4.7":
-  "integrity" "sha512-zaEC+iEiAHNdhl6fuwl0H0shnTzQoAoJiDYBUze8QTntE/GNPfTYpYboxF5LRYIjBwETUatvE0T64W6SKDipvg=="
-  "resolved" "https://registry.npmjs.org/@next/swc-linux-x64-gnu/-/swc-linux-x64-gnu-13.4.7.tgz"
-  "version" "13.4.7"
-
-"@next/swc-linux-x64-musl@13.4.7":
-  "integrity" "sha512-X6r12F8d8SKAtYJqLZBBMIwEqcTRvUdVm+xIq+l6pJqlgT2tNsLLf2i5Cl88xSsIytBICGsCNNHd+siD2fbWBA=="
-  "resolved" "https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-13.4.7.tgz"
+"@next/swc-win32-x64-msvc@13.4.7":
+  "integrity" "sha512-sW9Yt36Db1nXJL+mTr2Wo0y+VkPWeYhygvcHj1FF0srVtV+VoDjxleKtny21QHaG05zdeZnw2fCtf2+dEqgwqA=="
+  "resolved" "https://registry.npmjs.org/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-13.4.7.tgz"
   "version" "13.4.7"
 
 "@nodelib/fs.scandir@2.1.5":
