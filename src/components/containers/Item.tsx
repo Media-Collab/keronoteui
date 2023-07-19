@@ -1,10 +1,11 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, MutableRefObject } from "react";
 import Image from "next/image";
 import { Box, Stack, Typography, IconButton, Modal } from "@mui/material";
 import { useMediaQuery } from "@mui/material";
 import Icon from "@mdi/react";
 import { mdiHeartOutline, mdiHeart } from "@mdi/js";
+// @ts-ignore
 import { KeroContext } from "keronote";
 import { useKeronote } from "pages/canvas/hooks/keronote";
 
@@ -25,7 +26,7 @@ const KeroPlayer: React.FC<any> = ({ blobURL }) => {
   // Keronote Canvas
   const canvasRef = useRef<HTMLCanvasElement>();
   const [useKero, keroProps, keroCanvasActions, keroLayerActions] =
-    useKeronote(canvasRef);
+    useKeronote(canvasRef as MutableRefObject<HTMLCanvasElement>);
 
   // Avoid Editing
   useKero((k: KeroContext) => {
@@ -54,6 +55,7 @@ const KeroPlayer: React.FC<any> = ({ blobURL }) => {
 
   return (
     <canvas
+      // @ts-ignore
       ref={canvasRef}
       // width="620"
       width="320"

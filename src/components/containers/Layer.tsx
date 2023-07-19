@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+// @ts-ignore
 import { KeroContext, KeroPreview } from "keronote";
 import Checkbox from "@mui/material/Checkbox";
 
@@ -65,6 +66,7 @@ const Layer = (props: any) => {
       <canvas
         width="160"
         height="120"
+        // @ts-ignore
         ref={canvasRef}
         id={"thumb" + id}
         style={{

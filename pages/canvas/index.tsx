@@ -1,7 +1,8 @@
 "use client";
+// @ts-ignore
 import { KeroContext } from "keronote";
 import { useKeronote } from "./hooks/keronote";
-import { useEffect, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { GetServerSideProps } from "next";
 import { authProvider } from "src/authProvider";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -116,13 +117,13 @@ let onions = [
 
 const Canvas = () => {
   const [temporalBlob, setTemporalBlob] = useState<Blob>(new Blob());
-  const canvasRef = useRef<HTMLInputElement>();
+  const canvasRef = useRef<HTMLCanvasElement>();
   const [useKero, keroProps, keroCanvasActions, keroLayerActions] =
-    useKeronote(canvasRef);
+    useKeronote(canvasRef as MutableRefObject<HTMLCanvasElement>);
 
   const breakPoint = useMediaQuery("(min-width:900px)");
   const [modal, setModal] = useState<string | boolean>(false);
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<any>(null);
   const [size, setSize] = useState(5);
   const [toolSelected, setToolSelected] = useState(tools[0]);
   const [colorSelected, setColorSelected] = useState(colors[1]);
@@ -434,8 +435,8 @@ const Canvas = () => {
                       min={1}
                       max={64}
                       onChange={(e, value) => {
-                        keroProps.setSize(value);
-                        setSize(value);
+                        keroProps.setSize(value as number);
+                        setSize(value as number);
                       }}
                     />
                   </div>
@@ -646,6 +647,7 @@ const Canvas = () => {
           //height={breakPoint ? 506 : 184}
         >
           <canvas
+            // @ts-ignore
             ref={canvasRef}
             // width="620"
             width="320"
@@ -818,8 +820,8 @@ const Canvas = () => {
                         min={1}
                         max={24}
                         onChange={(e, value) => {
-                          keroProps.setSpeed(value);
-                          setAnimationSpeed(value);
+                          keroProps.setSpeed(value as number);
+                          setAnimationSpeed(value as number);
                         }}
                       />
                     </div>

@@ -1,4 +1,5 @@
 "use client";
+// @ts-ignore
 import { KeroContext, KeroFrame, KeroLayer } from "keronote";
 import {
   DependencyList,
@@ -349,8 +350,7 @@ export const useKeronote = (
         // Calculate Frame Speed
         let s = Math.floor(1000 / speed);
         k.player.speed(s);
-        // FIXME: Error in k.player
-        // k.player.replay();
+        k.player.replay();
       } catch (e) {
         console.log("useEffectKero err:", e);
       }

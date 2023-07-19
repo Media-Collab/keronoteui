@@ -46,7 +46,7 @@ const ProductList: React.FC = () => {
     setFile(e.target.files[0]);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     try {
       e.preventDefault();
       const formData = new FormData();
