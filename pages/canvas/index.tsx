@@ -139,8 +139,8 @@ const Canvas = () => {
   const [animationSpeed, setAnimationSpeed] = useState(8);
 
   const [formValues, setFormValues] = useState<any>({
-    urlKero: "",
-    urlImage: "",
+    // urlKero: "",
+    // urlImage: "",
     title: "default",
   });
   const { data: person } = useGetIdentity<any>();

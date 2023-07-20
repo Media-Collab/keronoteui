@@ -35,7 +35,11 @@ const tools = [
   { icon: mdiUndo, name: "Undo", description: "Undo last action" },
   { icon: mdiRedo, name: "Redo", description: "Redo last action" },
   // { icon: mdiSquare, name: "Square", description: "Draw square" },
-  { icon: mdiVectorCombine, name: "Vector", description: "Draw vector" },
+  {
+    icon: mdiVectorCombine,
+    name: "Onion",
+    description: "Set gray prev frames",
+  },
   { icon: mdiPlay, name: "Play", description: "Play animation" },
   { icon: mdiStop, name: "Stop", description: "Stop animation" },
   { icon: mdiPause, name: "Pause", description: "Pause animation" },
@@ -60,11 +64,15 @@ const tools = [
   { icon: mdiFormatColorFill, name: "Fill", description: "Fill color" },
   { icon: mdiContentSave, name: "Save", description: "Save animation" },
   { icon: mdiInformation, name: "Info", description: "Show animation info" },
-  { icon: mdiBackspace, name: "Backspace", description: "Delete animation" },
+  {
+    icon: mdiBackspace,
+    name: "Backspace",
+    description: "Empty layer contents",
+  },
   { icon: mdiMerge, name: "Merge", description: "Merge layers" },
   // { icon: mdiImage, name: "Image", description: "Upload image" },
   { icon: mdiDotsHorizontal, name: "More", description: "Show more options" },
-  { icon: mdiVectorSquareClose, name: "Close", description: "Close vector" },
+  { icon: mdiVectorSquareClose, name: "Onion...", description: "idk yet" },
   { icon: mdiSpeedometer, name: "Speed", description: "Change speed" },
 ];
 

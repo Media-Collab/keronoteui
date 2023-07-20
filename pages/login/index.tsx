@@ -11,9 +11,7 @@ import Image from "next/image";
 
 import bgImg from "./assets/bg.png";
 
-import {
-  useMediaQuery,
-} from "@mui/material";
+import { useMediaQuery } from "@mui/material";
 export default function Login() {
   const isMobile = useMediaQuery("(max-width: 600px)");
 
@@ -28,7 +26,6 @@ export default function Login() {
     >
       <div
         style={{
-          backgroundColor: "white",
           width: "100%",
         }}
       >

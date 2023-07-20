@@ -7,18 +7,52 @@ import { authProvider } from "src/authProvider";
 
 import { AppIcon } from "src/components/app-icon";
 
+import Image from "next/image";
+
+import bgImg from "./assets/bg.jpg";
+
+import { useMediaQuery } from "@mui/material";
 export default function Register() {
+  const isMobile = useMediaQuery("(max-width: 600px)");
+
   return (
-    <AuthPage
-      type="register"
-      title={
-        <ThemedTitleV2
-          collapsed={false}
-          text="Keronote_ui"
-          icon={<AppIcon />}
+    <div
+      style={{
+        display: isMobile ? "block" : "grid",
+        placeItems: "start",
+        overflow: "hidden",
+        gridTemplateColumns: "1fr 1fr",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+        }}
+      >
+        <AuthPage
+          type="register"
+          title={
+            <ThemedTitleV2
+              collapsed={false}
+              text="Keronote_ui"
+              icon={<AppIcon />}
+            />
+          }
         />
-      }
-    />
+      </div>
+      <Image
+        src={bgImg}
+        alt="bg"
+        style={{
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          display: isMobile ? "none" : "block",
+        }}
+      />
+    </div>
   );
 }
 

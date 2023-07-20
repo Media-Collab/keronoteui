@@ -7,8 +7,7 @@ import DevInfo from "@components/containers/DevInfo";
 import toolsInfo from "@components/kero/toolsInfo";
 import Tools from "@components/containers/Tools";
 // get data
-import { useList, HttpError } from "@refinedev/core";
-
+import { useGetIdentity, useList, HttpError } from "@refinedev/core";
 interface IAnimations {
   id: number;
   title: string;
@@ -19,10 +18,6 @@ interface IAnimations {
 }
 
 const Profile = () => {
-  const { data, isLoading, isError } = useList<IAnimations, HttpError>({
-    resource: "animation_list",
-  });
-
   const devs = [
     {
       id: 1,
@@ -44,27 +39,17 @@ const Profile = () => {
     },
   ];
 
-  const animations = data?.data ?? [];
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    return <div>Something went wrong!</div>;
-  }
-
   return (
     <section>
       <Divider textAlign="left">
         <h3>Keronote</h3>
       </Divider>
       <p>
-        we love flipnote animations, but the main problem is you need a nintendo
+        We love flipnote animations, but the main problem is you need a nintendo
         ds for create those animations. So we tried to do a simple animation
-        software having inspiration on those features from flipnote studio but
+        software having inspiration on those features from flipnote studio, but
         at the same time improving and adding more features like layer system
-        and extended color palette How i built it: we used refine for easily
+        and extended color palette. How i built it: we used refine for easily
         store animation information and we made a handmade canvas lib called
         "keronote", this project is also the frontend for that lib. Concept by:
         @mrgaturus
@@ -99,23 +84,9 @@ const Profile = () => {
       </Stack>
 
       <Divider textAlign="left">
-        <h3>Your favorites (soon...)</h3>
+        <h3>My Creations</h3>
       </Divider>
-      <Box sx={{ width: "100%" }}>
-        <Stack
-          component="div"
-          display="flex"
-          direction={{ xs: "column", sm: "row" }}
-          flexWrap="wrap"
-          justifyContent="space-around"
-          alignItems="center"
-          width={"100%"}
-        >
-          {animations.map((animation: any) => (
-            <Item content={animation} currentPage={1} />
-          ))}
-        </Stack>
-      </Box>
+      <MyCreations />
 
       <Divider textAlign="left">
         <h3>Developers</h3>
@@ -134,6 +105,49 @@ const Profile = () => {
         ))}
       </Stack>
     </section>
+  );
+};
+
+const MyCreations = () => {
+  const { data: person } = useGetIdentity<any>();
+
+  const { data, isLoading, isError } = useList<IAnimations, HttpError>({
+    resource: "animation_list",
+    filters: [
+      {
+        field: "user_email",
+        operator: "eq",
+        value: person?.name.split("@")[0],
+      },
+    ],
+  });
+  const animations = data?.data ?? [];
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Something went wrong!</div>;
+  }
+
+  return (
+    <Box sx={{ width: "100%" }}>
+      <Stack
+        component="div"
+        display="flex"
+        direction={{ xs: "column", sm: "row" }}
+        flexWrap="wrap"
+        justifyContent="space-around"
+        alignItems="center"
+        width={"100%"}
+      >
+        {animations.map((animation: any, index: number) => (
+          <Item key={index} content={animation} currentPage={1} />
+        ))}
+        {animations.length === 0 && <div>You have no animations yet</div>}
+      </Stack>
+    </Box>
   );
 };
 

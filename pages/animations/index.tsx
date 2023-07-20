@@ -46,19 +46,19 @@ export default function AnimationsList() {
   //   fetchItems();
   // }, [page]);
 
-  const handleScroll = () => {
-    const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-    if (scrollTop + clientHeight >= scrollHeight * 0.8 && !loading) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  };
+  // const handleScroll = () => {
+  //   const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
+  //   if (scrollTop + clientHeight >= scrollHeight * 0.8 && !loading) {
+  //     setPage((prevPage) => prevPage + 1);
+  //   }
+  // };
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  // useEffect(() => {
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -89,9 +89,8 @@ export default function AnimationsList() {
         {animations.map((animation: any, i: number) => (
           <Item key={i} content={animation} currentPage={page} />
         ))}
-        {/* {loading && <p>Loading...</p>} */}
       </Stack>
-      <FloatingButton>{page}</FloatingButton>
+      {/* <FloatingButton>{page}</FloatingButton> */}
     </Box>
   );
 }
