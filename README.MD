@@ -24,7 +24,7 @@ We love flipnote animations, but the main problem is you need a nintendo ds for 
   
 * JuanViverosDev
   * [Github](https://github.com/JuanViverosDev)
-  * [Twitter](https://twitter.com/HyperCreat500006/)
+  * [Twitter](https://twitter.com/HyperCreat50006/)
   
 * GregoryInnovo
   * [Github](https://github.com/gregoryInnovo/)
