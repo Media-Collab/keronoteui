@@ -7,9 +7,9 @@
 
 This [refine](https://github.com/pankod/refine) project was generated with [superplate](https://github.com/pankod/refine).
 
-## 🔗 Project Demo links
+## 🔗 Project Demo link
 
-- [Netlify](https://deft-pithivier-b4a203.netlify.app).
+- [Netlify deploy](https://deft-pithivier-b4a203.netlify.app)
 
 ## About
 
@@ -31,9 +31,45 @@ We love flipnote animations, but the main problem is you need a nintendo ds for 
   * [Twitter](https://twitter.com/GregoryInnovo/)
 
 ### Preview
-To provide a comprehensive understanding of the submission, add visuals such as GIFs, images and videos have been incorporated to give an impression of what it looks like.
+
 ## Pages
-[Demo Video](https://github.com/Media-Collab/keronoteui/assets/videos/Views.mp4)
+[Demo Video](https://youtu.be/OQgcjSWuvxE)
+## Create animations
+[Demo Video](https://youtu.be/ckomzCd_QL8)
+## View animations
+[Demo Video](https://youtu.be/NyO1v3tqjBc)
+## Login
+<div align="left">
+    <img src="./public/images/login.PNG" style="width:100%;" alt="login">
+</div>
+
+## Profile
+<div align="left">
+    <img src="./public/images/profile.PNG" style="width:100%;" alt="login">
+</div>
+
+## Community creations
+<div align="left">
+    <img src="./public/images/community_creations.PNG" style="width:100%;" alt="community_creations">
+</div>
+
+## View details
+<div align="left">
+    <img src="./public/images/focus_canvas.PNG" style="width:100%;" alt="focus_canvas">
+</div>
+
+## Canvas
+<div align="left">
+    <img src="./public/images/canvas.PNG" style="width:100%" alt="canvas">
+</div>
+
+## Tools
+<div align="left">
+    <img src="./public/images/tools.PNG" style="width:100%" alt="tools">
+    <img src="./public/images/tools2.PNG" style="width:100%" alt="tools2">
+    <img src="./public/images/tools3.PNG" style="width:100%" alt="tools3">
+    <img src="./public/images/toolidk.PNG" style="width:100%" alt="toolidk">
+</div>
 
 
 ### Set up Project
