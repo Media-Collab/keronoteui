@@ -1,14 +1,17 @@
 "use client";
 // @ts-ignore
 import { KeroContext } from "keronote";
+import { useRouter } from "next/router";
 import { useKeronote } from "@components/kero/keronote";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { GetServerSideProps } from "next";
 import { authProvider } from "src/authProvider";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Stack from "@mui/material/Stack";
+import { Stack, Box } from "@mui/material";
 import Layer from "@components/containers/Layer";
 import { uploadImage, uploadBlob } from "@components/kero/functions";
+import toolsInfo from "@components/kero/toolsInfo";
+import Tools from "@components/containers/Tools";
 import {
   Button,
   ClickAwayListener,
@@ -19,13 +22,14 @@ import {
   TextField,
   useMediaQuery,
 } from "@mui/material";
+import { useSnackbar } from "@refinedev/mui";
 import Icon from "@mdi/react";
 import {
   mdiEraser,
   mdiBrush,
   mdiUndo,
   mdiRedo,
-  mdiSquare,
+  // mdiSquare,
   mdiVectorCombine,
   mdiPlay,
   mdiStop,
@@ -46,7 +50,7 @@ import {
   mdiBackspace,
   mdiMerge,
   mdiDotsHorizontal,
-  mdiImage,
+  // mdiImage,
   mdiVectorSquareClose,
   mdiSpeedometer,
 } from "@mdi/js";
@@ -116,10 +120,15 @@ let onions = [
 ];
 
 const Canvas = () => {
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const [temporalBlob, setTemporalBlob] = useState<Blob>(new Blob());
   const canvasRef = useRef<HTMLCanvasElement>();
-  const [useKero, keroProps, keroCanvasActions, keroLayerActions] =
-    useKeronote(canvasRef as MutableRefObject<HTMLCanvasElement>);
+  const [useKero, keroProps, keroCanvasActions, keroLayerActions] = useKeronote(
+    canvasRef as MutableRefObject<HTMLCanvasElement>
+  );
+
+  const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
 
   const breakPoint = useMediaQuery("(min-width:900px)");
   const [modal, setModal] = useState<string | boolean>(false);
@@ -139,32 +148,34 @@ const Canvas = () => {
 
   // console.log("info:", person);
 
-  const saveAnimation = () => {
+  const saveAnimation = (urlI: string, urlK: string) => {
     mutate({
       resource: "animations",
       values: {
-        kerofile: formValues.urlKero,
-        thumbnail: formValues.urlImage,
+        kerofile: urlK,
+        thumbnail: urlI,
         title: formValues.title,
         user_id: person.id || "default",
         user_email: person.name.split("@")[0] || "default",
       },
     });
-    alert("view on the supabase");
+
+    enqueueSnackbar("Data saved return in 3 secounds!", {
+      variant: "success",
+    });
+    setTimeout(() => {
+      router.push("/animations");
+    }, 3000);
   };
   // -------------------------------
   // Ejemplos de como usar los Blobs
   // -------------------------------
-
-  const cbSaveTemporalBlob = () => {
+  const cbSaveTemporalBlob = (urlI: string) => {
     keroCanvasActions.save((kero: Blob) => {
       console.log(kero);
-      const urlBlob = uploadBlob(kero);
+      const urlBlob = uploadBlob(kero, enqueueSnackbar);
       urlBlob.then((urlKero) => {
-        setFormValues({
-          ...formValues,
-          urlKero,
-        });
+        saveAnimation(urlI, urlKero);
       });
       setTemporalBlob(kero);
     });
@@ -175,15 +186,12 @@ const Canvas = () => {
     keroCanvasActions.load(temporalBlob);
   };
 
-  const cbSaveImageBlob = async () => {
+  const cbSaveImageBlob = () => {
     keroCanvasActions.saveThumbnail((img: Blob) => {
       // save img to cloudinary
-      const urlImg = uploadImage(img);
+      const urlImg = uploadImage(img, enqueueSnackbar);
       urlImg.then((urlImage) => {
-        setFormValues({
-          ...formValues,
-          urlImage,
-        });
+        cbSaveTemporalBlob(urlImage);
       });
     });
   };
@@ -687,15 +695,14 @@ const Canvas = () => {
           >
             <div
               onClick={(e) => {
-                //setModal("save");
-                //setAnchorEl(e.currentTarget);
-                // TODO save to cloudinary
-                cbSaveTemporalBlob();
+                e.preventDefault();
+                // setModal("info");
+                setModal("save");
               }}
             >
               <Icon path={mdiContentSave} size={1} />
             </div>
-            <div
+            {/* <div
               onClick={(e) => {
                 //setModal("save");
                 //setAnchorEl(e.currentTarget);
@@ -704,14 +711,12 @@ const Canvas = () => {
               }}
             >
               <Icon path={mdiImage} size={1} />
-            </div>
+            </div> */}
             <div
               onClick={(e) => {
                 e.preventDefault();
-                // setModal("info");
-                setModal("save");
-                //setAnchorEl(e.currentTarget);
-                // cbLoadTemporalBlob();
+                setModal("info");
+                // setModal("save");
               }}
             >
               <Icon path={mdiInformation} size={1} />
@@ -956,6 +961,7 @@ const Canvas = () => {
             flexDirection: "column",
             gap: "1rem",
             alignItems: "center",
+            maxWidth: "750px",
             padding: "15px",
             backgroundColor: "#BFDBFE",
             borderRadius: "1rem",
@@ -963,11 +969,34 @@ const Canvas = () => {
           }}
         >
           <h2 id="modal-modal-title">Information</h2>
-          <p id="modal-modal-description">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-            voluptatum, quibusdam, quia, quod voluptatem voluptate quos
-            voluptates quas quibusdam, quia, quod voluptatem voluptate quos
-          </p>
+          <Stack
+            component="div"
+            display="flex"
+            direction={{ xs: "row", sm: "row" }}
+            flexWrap="wrap"
+            justifyContent="space-around"
+            alignItems="center"
+            width={"100%"}
+            height={"70vh"}
+            sx={{
+              overflow: "auto",
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+                alignItems: "center",
+                justifyContent: "space-around",
+              }}
+            >
+              {toolsInfo.map((tool: any) => (
+                <Tools tool={tool} />
+              ))}
+            </Box>
+          </Stack>
         </div>
       </Modal>
 
@@ -984,6 +1013,7 @@ const Canvas = () => {
       >
         <div
           style={{
+            width: "500px",
             display: "flex",
             flexDirection: "column",
             gap: "1rem",
@@ -994,7 +1024,7 @@ const Canvas = () => {
             boxShadow: "rgb(0 0 0 / 25%) 0px 0px 4px 0px",
           }}
         >
-          <h2 id="modal-modal-title">Save</h2>
+          <h2 id="modal-modal-title">Save thumbnail, animation and title</h2>
           <section
             style={{
               display: "flex",
@@ -1018,8 +1048,10 @@ const Canvas = () => {
               variant="contained"
               fullWidth
               onClick={() => {
-                saveAnimation();
+                setIsSaving(true);
+                cbSaveImageBlob();
               }}
+              disabled={isSaving}
             >
               Save
             </Button>

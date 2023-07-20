@@ -89,7 +89,7 @@ export default function AnimationsList() {
         {animations.map((animation: any, i: number) => (
           <Item key={i} content={animation} currentPage={page} />
         ))}
-        {loading && <p>Loading...</p>}
+        {/* {loading && <p>Loading...</p>} */}
       </Stack>
       <FloatingButton>{page}</FloatingButton>
     </Box>

@@ -97,13 +97,13 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
                     icon: <Icon path={mdiDraw} size={1} />,
                   },
                 },
-                {
-                  name: "test",
-                  list: "/test",
-                  meta: {
-                    icon: <Icon path={mdiTestTube} size={1} />,
-                  },
-                },
+                // {
+                //   name: "test",
+                //   list: "/test",
+                //   meta: {
+                //     icon: <Icon path={mdiTestTube} size={1} />,
+                //   },
+                // },
               ]}
               options={{
                 syncWithLocation: true,

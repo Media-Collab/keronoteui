@@ -1,9 +1,11 @@
 import { GetServerSideProps } from "next";
 import { authProvider } from "src/authProvider";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import { Box, Typography, Stack, Divider } from "@mui/material";
+import { Box, Stack, Divider } from "@mui/material";
 import Item from "@components/containers/Item";
 import DevInfo from "@components/containers/DevInfo";
+import toolsInfo from "@components/kero/toolsInfo";
+import Tools from "@components/containers/Tools";
 // get data
 import { useList, HttpError } from "@refinedev/core";
 
@@ -58,21 +60,43 @@ const Profile = () => {
         <h3>Keronote</h3>
       </Divider>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta, et!
-        Saepe magnam, dolores unde labore laudantium alias consequatur
-        necessitatibus dolorem sint dignissimos excepturi officiis obcaecati
-        vero eius quam possimus fugiat! Concept by: @mrgaturus
+        we love flipnote animations, but the main problem is you need a nintendo
+        ds for create those animations. So we tried to do a simple animation
+        software having inspiration on those features from flipnote studio but
+        at the same time improving and adding more features like layer system
+        and extended color palette How i built it: we used refine for easily
+        store animation information and we made a handmade canvas lib called
+        "keronote", this project is also the frontend for that lib. Concept by:
+        @mrgaturus
       </p>
 
       <Divider textAlign="left">
         <h3>How Canvas Works?</h3>
       </Divider>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta, et!
-        Saepe magnam, dolores unde labore laudantium alias consequatur
-        necessitatibus dolorem sint dignissimos excepturi officiis obcaecati
-        vero eius quam possimus fugiat!
-      </p>
+      <Stack
+        component="div"
+        display="flex"
+        direction={{ xs: "row", sm: "row" }}
+        flexWrap="wrap"
+        justifyContent="space-around"
+        alignItems="center"
+        width={"100%"}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "space-around",
+          }}
+        >
+          {toolsInfo.map((tool: any) => (
+            <Tools tool={tool} />
+          ))}
+        </Box>
+      </Stack>
 
       <Divider textAlign="left">
         <h3>Your favorites (soon...)</h3>

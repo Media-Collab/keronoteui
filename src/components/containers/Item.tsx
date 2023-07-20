@@ -25,8 +25,9 @@ interface ItemProps {
 const KeroPlayer: React.FC<any> = ({ blobURL }) => {
   // Keronote Canvas
   const canvasRef = useRef<HTMLCanvasElement>();
-  const [useKero, keroProps, keroCanvasActions, keroLayerActions] =
-    useKeronote(canvasRef as MutableRefObject<HTMLCanvasElement>);
+  const [useKero, keroProps, keroCanvasActions, keroLayerActions] = useKeronote(
+    canvasRef as MutableRefObject<HTMLCanvasElement>
+  );
 
   // Avoid Editing
   useKero((k: KeroContext) => {
@@ -118,7 +119,7 @@ const Item: React.FC<ItemProps> = ({ content, currentPage }) => {
         variant="h6"
         style={{ marginBottom: "auto", fontWeight: "bold" }}
       >
-        {content.title || "No title"}-page: {currentPage}
+        {content.title || "No title"}
       </Typography>
       <Box
         position="relative"
@@ -153,6 +154,7 @@ const Item: React.FC<ItemProps> = ({ content, currentPage }) => {
         modalOpen={modalOpen}
         handleModalClose={handleModalClose}
         handleLike={handleLike}
+        likesFake={likes}
       />
     </Box>
   );
@@ -163,6 +165,7 @@ const KeroModal: React.FC<any> = ({
   modalOpen,
   handleModalClose,
   handleLike,
+  likesFake,
 }) => {
   const breakPoint = useMediaQuery("(min-width:900px)");
 
@@ -200,19 +203,12 @@ const KeroModal: React.FC<any> = ({
           height={breakPoint ? "26rem" : "70vw"}
         >
           <KeroPlayer blobURL={content.kerofile} />
-          {/*  <Image
-        src="https://cdn.pixabay.com/photo/2022/12/01/04/35/sunset-7628294_1280.jpg"
-        alt="Image"
-        layout="fill"
-        objectFit="contain"
-        // Añade el evento para activar pantalla completa
-      /> */}
         </Box>
         <Stack direction="column" alignItems="left">
           <IconButton onClick={handleLike} color="primary">
             {/*<-- Necesito que hagas un useOne para saber si tiene like con el usuario*/}
             <Icon path={0 ? mdiHeart : mdiHeartOutline} size={1} />
-            <Typography>{content.likes} Likes</Typography>
+            <Typography>{content.likes || likesFake} Likes</Typography>
           </IconButton>
 
           {/* close modal */}
