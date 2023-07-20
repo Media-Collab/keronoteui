@@ -26,7 +26,7 @@ const Profile = () => {
       id: 1,
       developer: "mrgaturus",
       occupation: "Canvas logic | Backend",
-      uri: "https://github.com/mr/",
+      uri: "https://github.com/mrgaturus/",
     },
     {
       id: 2,

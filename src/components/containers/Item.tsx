@@ -7,7 +7,7 @@ import Icon from "@mdi/react";
 import { mdiHeartOutline, mdiHeart } from "@mdi/js";
 // @ts-ignore
 import { KeroContext } from "keronote";
-import { useKeronote } from "pages/canvas/hooks/keronote";
+import { useKeronote } from "@components/kero/keronote";
 
 interface ItemProps {
   content: {

@@ -1,14 +1,14 @@
 "use client";
 // @ts-ignore
 import { KeroContext } from "keronote";
-import { useKeronote } from "./hooks/keronote";
+import { useKeronote } from "@components/kero/keronote";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { GetServerSideProps } from "next";
 import { authProvider } from "src/authProvider";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Stack from "@mui/material/Stack";
 import Layer from "@components/containers/Layer";
-import { uploadImage, uploadBlob } from "./functions";
+import { uploadImage, uploadBlob } from "@components/kero/functions";
 import {
   Button,
   ClickAwayListener,
