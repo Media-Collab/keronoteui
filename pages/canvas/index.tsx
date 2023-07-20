@@ -160,7 +160,7 @@ const Canvas = () => {
       },
     });
 
-    enqueueSnackbar("Data saved return in 3 secounds!", {
+    enqueueSnackbar("Data saved return in 3 seconds!", {
       variant: "success",
     });
     setTimeout(() => {

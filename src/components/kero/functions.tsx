@@ -37,7 +37,7 @@ export const uploadBlob = async (file: any, snackbarRef: any) => {
     const { fileUrl } = await res.json();
     // alert("Saved blob! see the console (delete this in pages/canvas/functions.tsx)");
     console.log(fileUrl);
-    snackbarRef("Animatation saved!", {
+    snackbarRef("Animation saved!", {
       variant: "success",
     });
 
